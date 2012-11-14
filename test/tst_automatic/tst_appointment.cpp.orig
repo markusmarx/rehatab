@@ -1,0 +1,66 @@
+#include "tst_appointment.h"
+#include "logic/appointmentcontroller.h"
+#include "data/appointment.h"
+#include "data/appointmentsummary.h"
+#include "data/clientappointment.h"
+#include "util/timeiteration.h"
+#include <QTest>
+#include <QDebug>
+
+tst_Appointment::tst_Appointment(QObject *parent) :
+    tst_Base(parent)
+{
+}
+
+void tst_Appointment::initTestCase()
+{
+    openTestDb();
+}
+
+void tst_Appointment::cleanupTestCase()
+{
+}
+
+void tst_Appointment::tst_appointmentCRUD()
+{
+    AppointmentController* appC = new AppointmentController;
+
+    Appointment* app = appC->createAppointment();
+
+    app->setFromDate(QDate::fromString("01.10.2012", "dd.MM.yyyy"));
+    app->setFromTime(QTime::currentTime());
+    app->setMinutes(45);
+    app->setName("test");
+    app->setDescription("test");
+    app->setItStart(app->fromDate());
+    app->setItModel("w 2 1");
+    appC->saveAppointment(app);
+
+    QVERIFY(app->appointmentSummary()->id() > 0);
+    QVERIFY(app->id() > 0);
+
+    QList<Appointment*> appList = appC->getAppointments(QDate::fromString("01.10.2012", "dd.MM.yyyy"), QDate::fromString("30.10.2012", "dd.MM.yyyy"));
+
+    QCOMPARE(3, appList.size());
+
+<<<<<<< local
+    //TimeIteration t("w 3 123", QDate::fromString("01.10.2012", "dd.MM.yyyy"));
+=======
+    Appointment* app1 = appList.at(1);
+    QCOMPARE(QDate::fromString("15.10.2012", "dd.MM.yyyy"), app1->fromDate());
+    appC->saveAppointment(app1);
+    appList = appC->getAppointments(QDate::fromString("01.10.2012", "dd.MM.yyyy"), QDate::fromString("30.10.2012", "dd.MM.yyyy"));
+>>>>>>> other
+
+<<<<<<< local
+//    QList<QDate> dl = t.findDates(QDate::fromString("01.09.2012", "dd.MM.yyyy"), QDate::fromString("30.09.2012", "dd.MM.yyyy"));
+
+//    foreach (QDate d, dl) {
+//        qDebug() << d << "\n";
+//    }
+
+=======
+    QCOMPARE(3, appList.size());
+>>>>>>> other
+
+}

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>conf/rehatab_v1_sqlite.sql</file>
+    </qresource>
+</RCC>
