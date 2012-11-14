@@ -68,6 +68,14 @@ bool GroupController::saveGroup(PersonGroup* group)
     map["validTo"] = QDateTime::currentDateTime();
     qs.update(map);
 
+
+    QList<QObject*> personList = group->personList()->list();
+    Person* person;
+    foreach(QObject* obj, personList) {
+        person = qobject_cast<Person*>(obj);
+
+    }
+
     return true;
 }
 
@@ -126,7 +134,13 @@ PersonGroup *GroupController::loadGroup(PersonGroup* group)
         qs.selectRelated();
         qDebug() << "found " << qs.size() << " clients";
         for (int i = 0; i < qs.size(); i++) {
-            personList.append(qs.at(i)->client());
+            Person* p = qs.at(i)->client();
+            personList.append(p);
+            QList<QObject*> cl;
+//            if (qs.at(i)->contract()) {
+//                cl.append(qs.at(i)->contract());
+//                p->setContracts(cl);
+//            }
         }
 
         group->setPersonList(personList);

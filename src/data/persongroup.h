@@ -12,7 +12,7 @@ class Appointment;
 class PersonGroup : public QDjangoModel
 {
     Q_OBJECT
-    int m_id;
+
 
     QString m_name;
 
@@ -28,6 +28,12 @@ class PersonGroup : public QDjangoModel
 
     QObjectListModel* m_personList;
 
+    QHash<int, QVariantList> m_personData;
+
+    //QByteArray m_data;
+
+    int m_id;
+
 public:
     explicit PersonGroup(QObject *parent = 0);
     Q_PROPERTY(int id READ id WRITE setId)
@@ -38,25 +44,20 @@ public:
     Q_PROPERTY(QString iteration READ iteration WRITE setIteration)
     Q_PROPERTY(QDateTime validFrom READ validFrom WRITE setValidFrom)
     Q_PROPERTY(QDateTime validTo READ validTo WRITE setValidTo)
+    //Q_PROPERTY(QByteArray data READ data WRITE setData)
     Q_PROPERTY(Appointment* appointment READ appointment WRITE setAppointment)
-
 
     Q_PROPERTY(QObjectListModel* personList READ personList)
 
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=groupId")
     Q_CLASSINFO("name", "max_length=255")
     Q_CLASSINFO("appointment", "db_column=appointmentId")
-    Q_CLASSINFO("personList", "ignore_field=true")
+    Q_CLASSINFO("personList","ignore_field=true")
     Q_CLASSINFO("time", "ignore_field=true")
 
-    Q_INVOKABLE QVariant personData(int personId, QString name);
+    Q_INVOKABLE bool personData(int personId, QVariant value);
     Q_INVOKABLE void setPersonData(int personId, QString name, QVariant value);
 
-
-    int id() const
-    {
-        return m_id;
-    }
 
     QString name() const
     {
@@ -87,8 +88,6 @@ public:
         return m_date;
     }
 
-    QObjectListModel* personList() const;
-
     Appointment* appointment() const
     {
         return qobject_cast<Appointment*>(foreignKey("appointment"));
@@ -98,6 +97,21 @@ public:
     {
         return m_date;
     }
+
+//    QByteArray data() const
+//    {
+//        return m_data;
+//    }
+
+    int id() const
+    {
+        return m_id;
+    }
+
+    QObjectListModel* personList() const;
+
+    void setPersonDataHash(int personId, QVariantList hash);
+    QVariantList personDataHash(int personId);
 
 public slots:
 
@@ -141,6 +155,10 @@ public slots:
     {
         m_date.setTime(arg.time());
     }
+//    void setData(QByteArray arg)
+//    {
+//        m_data = arg;
+//    }
 };
 
 #endif // GROUP_H

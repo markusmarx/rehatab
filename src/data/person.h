@@ -22,6 +22,7 @@ public:
     Q_PROPERTY(QDateTime deleted READ deleted WRITE setDeleted)
     Q_PROPERTY(QObjectListModel* appointments READ appointments)
     Q_PROPERTY(QObjectListModel* contracts READ contracts)
+    Q_PROPERTY(bool presence READ presence WRITE setPresence)
 
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=personId")
     Q_CLASSINFO("name", "max_length=255")
@@ -32,6 +33,7 @@ public:
     Q_CLASSINFO("deleted", "null=true")
     Q_CLASSINFO("contracts", "ignore_field=true")
     Q_CLASSINFO("appointments", "ignore_field=true")
+    Q_CLASSINFO("presence", "ignore_field=true")
 public:
     QString name() const;
     void setName(const QString &name);
@@ -60,6 +62,9 @@ public:
     QObjectListModel* contracts() const;
     QObjectListModel* appointments() const;
 
+    void setPresence(bool precence);
+    bool presence() const;
+
 
 private:
     QString m_name;
@@ -72,6 +77,7 @@ private:
     QDateTime m_deleted;
     QObjectListModel *m_contracts;
     QObjectListModel *m_appointments;
+    bool m_presence;
     
 };
 

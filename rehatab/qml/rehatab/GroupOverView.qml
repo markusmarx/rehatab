@@ -65,8 +65,8 @@ Item {
                         onDrop: {
                             event.accept(Qt.LinkAction);
                             var contractList = clientController.getContracts(event.data.text)
-                            comp_contractList.createObject(group_overview, {list: contractList})
-                            //fnLinkPersonToGroup(event.data.text, id)
+                            //comp_contractList.createObject(group_overview, {list: contractList})
+                            fnLinkPersonToGroup(event.data.text, id)
                         }
                     }
                 }

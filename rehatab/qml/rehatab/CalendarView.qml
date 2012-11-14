@@ -4,16 +4,15 @@ import QtDesktop 0.1
 import Rehatab 1.0
 Rectangle {
     id: calendarView
-    color: myPalette.buttonBg
-    border.width: 4
-    border.color: myPalette.buttonBorder
+    color: "white"
+
     property int gridWidth: 200
     property int gridHeight: 50
 
     function fnOpenAppointment(id) {
 
         var form = comp_groupform.createObject(calendarView, {_group: groupController.loadGroup(groupController.findByAppointmentId(id))});
-        form.fnLoadGroup();
+        form.children[0].fnLoadGroup();
 
     }
 
@@ -91,7 +90,7 @@ Rectangle {
             Rectangle {
 
                 width: gridWidth
-                color: "#efefef"
+                color: "white"
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -204,13 +203,17 @@ Rectangle {
 
 Component {
     id:comp_groupform
-    GroupForm {
+    Rectangle {
+        property alias _group: groupform._group
+        anchors.fill: parent
+        GroupForm {
         id:groupform
         mode: 1
         anchors.fill: parent
         onClose: {
-            groupform.destroy()
+            parent.destroy()
         }
+    }
     }
 }
 }

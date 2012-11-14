@@ -40,8 +40,6 @@ PRIMARY KEY ("appointmentId" ASC)
 CREATE TABLE Contract (
     contractId INTEGER PRIMARY KEY,
     clientId INTEGER NOT NULL,
-    data BLOB,
-    result BLOB,
     validFrom DATE NOT NULL,
     validTo DATE NOT NULL,
     value INTEGER NOT NULL,
@@ -75,6 +73,7 @@ contractId                 INTEGER,
 clientId                   INTEGER NOT NULL,
 validFrom                   DATE,
 validTo                     DATE,
+data                        BLOB,
 FOREIGN KEY ( groupId ) REFERENCES PersonGroup ( groupId ),
 FOREIGN KEY ( contractId ) REFERENCES Contract ( contractId ),
 FOREIGN KEY ( clientId ) REFERENCES Person ( personId )
@@ -135,3 +134,13 @@ CREATE TABLE sqlite_sequence(name,seq);
 -- Records of sqlite_sequence
 -- ----------------------------
 INSERT INTO "sqlite_sequence" VALUES ('Person', 9);
+
+-- ----------------------------
+-- Table structure for "main"."Contract"
+-- ----------------------------
+CREATE TABLE PersonGroupHistory (
+    personGroupHistoryId INTEGER PRIMARY KEY,
+    group2PersonId INTEGER NOT NULL,
+    date DATETIME NOT NULL,
+    present INTEGER,
+    FOREIGN KEY ( group2PersonId ) REFERENCES Group2Person ( group2PersonId ));

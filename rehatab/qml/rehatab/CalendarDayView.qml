@@ -5,7 +5,7 @@ import QtDesktop 0.1
 Rectangle {
     id: calendarDayView
     color:"white"
-    border.color: "black"
+    border.color: "white"
     width: calendarTimeline.width
     height: calendarTimeline.height
     property date day
@@ -53,7 +53,8 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onDoubleClicked: {
-                    console.log("load appointment " + id)
+                    console.log("load appointment " + day+from)
+
                     fnOpenAppointment(id)
                 }
             }

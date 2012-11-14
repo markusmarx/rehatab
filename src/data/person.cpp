@@ -114,6 +114,16 @@ QObjectListModel *Person::appointments() const
     return m_appointments;
 }
 
+void Person::setPresence(bool precence)
+{
+    m_presence = precence;
+}
+
+bool Person::presence() const
+{
+    return m_presence;
+}
+
 Q_DECLARE_METATYPE(Person*)
 
 

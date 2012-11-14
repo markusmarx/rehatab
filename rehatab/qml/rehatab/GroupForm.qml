@@ -62,11 +62,17 @@ Item {
 
                 Button {
                     text: "Gruppe anlegen"
-                    onClicked: fnSaveGroup()
+                    onClicked: {
+                        focus = true
+                        fnSaveGroup()
+                    }
                 }
                 Button {
                     text: "Dialog schließen"
-                    onClicked: fnCloseDialog();
+                    onClicked: {
+                        focus = true
+                        fnCloseDialog();
+                    }
                 }
             }
 
@@ -145,6 +151,7 @@ Item {
         Flow {
             id:groupform_clientlist
             anchors.top: groupform_input.bottom
+            anchors.topMargin: 20
             width: parent.width
             anchors.bottom: parent.bottom
             Repeater {

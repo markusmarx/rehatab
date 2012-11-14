@@ -6,7 +6,8 @@ HEADERS += \
     data/contract.h \
     data/qobjectlistmodel.h \
     data/group2person.h \
-    data/persongroup.h
+    data/persongroup.h \
+    data/persongrouphistory.h
 
 SOURCES += \
     data/personlist.cpp \
@@ -16,4 +17,5 @@ SOURCES += \
     data/contract.cpp \
     data/qobjectlistmodel.cpp \
     data/group2person.cpp \
-    data/persongroup.cpp
+    data/persongroup.cpp \
+    data/persongrouphistory.cpp
