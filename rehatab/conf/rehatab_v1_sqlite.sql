@@ -73,7 +73,6 @@ contractId                 INTEGER,
 clientId                   INTEGER NOT NULL,
 validFrom                   DATE,
 validTo                     DATE,
-data                        BLOB,
 FOREIGN KEY ( groupId ) REFERENCES PersonGroup ( groupId ),
 FOREIGN KEY ( contractId ) REFERENCES Contract ( contractId ),
 FOREIGN KEY ( clientId ) REFERENCES Person ( personId )
@@ -141,6 +140,9 @@ INSERT INTO "sqlite_sequence" VALUES ('Person', 9);
 CREATE TABLE PersonGroupHistory (
     personGroupHistoryId INTEGER PRIMARY KEY,
     group2PersonId INTEGER NOT NULL,
+    clientId INTEGER NOT NULL,
+    personGroupId INTEGER NOT NULL,
     date DATETIME NOT NULL,
     present INTEGER,
-    FOREIGN KEY ( group2PersonId ) REFERENCES Group2Person ( group2PersonId ));
+    FOREIGN KEY ( group2PersonId ) REFERENCES Group2Person ( group2PersonId )
+);

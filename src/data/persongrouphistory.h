@@ -23,7 +23,7 @@ public:
     Q_PROPERTY(Group2Person* group2Person READ group2Person WRITE setGroup2Person)
 
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=personGroupHistoryId")
-    Q_CLASSINFO("person2Group", "db_column=group2PersonId")
+    Q_CLASSINFO("group2Person", "db_column=group2PersonId")
 
 
     int id() const

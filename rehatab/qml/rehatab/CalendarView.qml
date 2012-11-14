@@ -2,6 +2,7 @@
 import QtQuick 1.1
 import QtDesktop 0.1
 import Rehatab 1.0
+import QmlFeatures 1.0
 Rectangle {
     id: calendarView
     color: "white"
@@ -9,9 +10,9 @@ Rectangle {
     property int gridWidth: 200
     property int gridHeight: 50
 
-    function fnOpenAppointment(id) {
-
-        var form = comp_groupform.createObject(calendarView, {_group: groupController.loadGroup(groupController.findByAppointmentId(id))});
+    function fnOpenAppointment(id, day, from) {
+        var date = QmlUtil.join(day, from)
+        var form = comp_groupform.createObject(calendarView, {_group: groupController.loadGroup(groupController.findByAppointmentId(id), date), currentDate: date});
         form.children[0].fnLoadGroup();
 
     }

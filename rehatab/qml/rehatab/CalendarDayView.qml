@@ -53,9 +53,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onDoubleClicked: {
-                    console.log("load appointment " + day+from)
-
-                    fnOpenAppointment(id)
+                    fnOpenAppointment(id, date, from)
                 }
             }
             CursorArea {

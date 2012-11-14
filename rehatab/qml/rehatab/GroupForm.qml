@@ -9,6 +9,7 @@ Item {
     property int weekFlags
     property PersonGroup _group
     property int mode:0
+    property date currentDate;
     signal close()
 
     function fnSaveGroup() {
@@ -27,7 +28,11 @@ Item {
         }
 
         _group.iteration = iteration;
-        groupController.saveGroup(_group)
+        if (mode == 1) {
+            groupController.saveGroup(_group, currentDate)
+        } else {
+            groupController.saveGroup(_group)
+        }
         fnCloseDialog()
     }
 
@@ -171,10 +176,10 @@ Item {
 
                     CheckBox {
                         visible: mode == 1
-                        checked: Qt.isQtObject(_group)? _group.personData(id, "attendance"): false
+                        checked: Qt.isQtObject(_group)? _group.personList.findById(id).presence: false
                         onCheckedChanged: {
                             if (Qt.isQtObject(_group)) {
-                                _group.setPersonData(id, "attendance", checked)
+                                _group.personList.findById(id).presence = checked
                             }
                         }
                     }
