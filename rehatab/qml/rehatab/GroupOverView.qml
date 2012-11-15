@@ -10,7 +10,7 @@ Item {
 
     function fnLinkPersonToGroup(personId, groupId) {
         console.log("link person " + personId + " to " + groupId)
-        groupController.addPersonToGroup(clientController.getPerson(personId),
+        groupController.addPersonToGroup(clientController.loadPerson(clientController.getPerson(personId)),
                                          groupController.allGroups().findById(groupId));
     }
 

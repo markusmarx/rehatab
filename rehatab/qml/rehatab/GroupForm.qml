@@ -165,6 +165,15 @@ Item {
                 delegate: Item {
                     width: delegate.width
                     height: delegate.height
+
+                    property Person _person
+                    property Contract _contract
+
+                    Component.onCompleted: {
+                        _person = _group.personList.findById(id);
+                        _contract = clientController.loadContract(_person.contracts.at(0));
+                    }
+
                     PersonDelegateSmall {
                         id: delegate
                     }
@@ -177,13 +186,18 @@ Item {
 
                     CheckBox {
                         visible: mode == 1
-                        checked: Qt.isQtObject(_group)? _group.personList.findById(id).presence: false
+                        checked: Qt.isQtObject(_group)? _person.presence: false
                         onCheckedChanged: {
                             if (Qt.isQtObject(_group)) {
-                                _group.personList.findById(id).presence = checked
+                                _person.presence = checked
                             }
                         }
                     }
+                    Text {
+                        y: 30
+                        text: _contract.openValue
+                    }
+
                 }
             }
         }

@@ -4,6 +4,8 @@
 #include "data/appointment.h"
 #include "data/qobjectlistmodel.h"
 #include "QDjangoQuerySet.h"
+#include <data/group2person.h>
+#include <data/persongrouphistory.h>
 
 ClientController::ClientController(QObject *parent) :
     QObject(parent)
@@ -103,37 +105,45 @@ QList<QObject *> ClientController::getContracts(Person *person)
     return getContracts(person->id());
 }
 
+Contract* ClientController::loadContract(Contract* contract)
+{
+    QStringList fields;
+    fields << "id";
+    QDjangoQuerySet<Group2Person> group2PersonQuery;
+    QDjangoQuerySet<PersonGroupHistory> pgHistoryQuery;
+    int openValue = contract->value();
+
+    QList<QVariantMap> mapList = group2PersonQuery.filter(QDjangoWhere("contract_id", QDjangoWhere::Equals, contract->id())).values(fields);
+    foreach(QVariantMap map, mapList) {
+        int count = pgHistoryQuery.filter(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, map["id"].toInt())
+                     && QDjangoWhere("present", QDjangoWhere::Equals, true)).count();
+        openValue -= count;
+    }
+    contract->setOpenValue(openValue);
+    return contract;
+}
+
 QList<QObject *> ClientController::getContracts(int personId)
 {
     QList<QObject*> contractList;
     QDjangoQuerySet<Contract> contractQs;
     Contract* contract;
-//    ClientAppointment* clApp;
-//    int usedValue;
     QStringList orderby;
     orderby << "validFrom" << "validTo";
     contractQs = contractQs
             .filter(QDjangoWhere("client_id", QDjangoWhere::Equals, personId))
             .orderBy(orderby);
+
     //
     // calculate openvalues for contract
     //
+
+
+
     for (int i = contractQs.size()-1; i >=0 ; i--) {
         contract = contractQs.at(i);
+        loadContract(contract);
 
-
-//        QDjangoQuerySet<ClientAppointment> clAppQs;
-//        clAppQs = clAppQs.filter(QDjangoWhere("client_id", QDjangoWhere::Equals, contract->id()));
-//        if (contract->type() == 0) {
-//            usedValue = clAppQs.count();
-//        } else {
-//            clAppQs.selectRelated();
-
-//            for (int j = 0; j < clAppQs.size(); j++) {
-//                clApp = clAppQs.at(i);
-//                usedValue += clApp->appointment()->minutes();
-//            }
-//        }
         //contract->setOpenValue(contract->value()-usedValue);
         contractList.append(contract);
     }

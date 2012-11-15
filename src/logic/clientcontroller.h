@@ -95,6 +95,7 @@ public:
     Q_INVOKABLE QList<QObject*> getContracts(int personId);
 
 
+    Q_INVOKABLE Contract* loadContract(Contract* contract);
 signals:
     
 public slots:

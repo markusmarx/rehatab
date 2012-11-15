@@ -154,7 +154,17 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group)
     gp->setClient(pqs.get(QDjangoWhere("id", QDjangoWhere::Equals, person->id())));
     gp->setPersonGroup(pgqs.get(QDjangoWhere("id", QDjangoWhere::Equals, group->id())));
     gp->setValidFrom(QDateTime::currentDateTime());
-    gp->save();
+    if (person->contracts()->list().size() > 0) {
+        foreach (QObject* obj, person->contracts()->list()) {
+            Contract* c = qobject_cast<Contract*>(obj);
+            if (QDate::currentDate().daysTo(c->validTo()) >= 0) {
+                gp->setContract(c);
+                gp->save();
+                break;
+            }
+        }
+    }
+
     return true;
 }
 
@@ -177,7 +187,7 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
             Person* p = qs.at(i)->client();
             personList.append(p);
             QList<QObject*> cl;
-            if (qs.at(i)->contract()) {
+            if (qs.at(i)->contract()->id() > 0) {
                 cl.append(qs.at(i)->contract());
                 p->setContracts(cl);
             }

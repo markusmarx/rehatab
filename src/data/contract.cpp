@@ -66,6 +66,7 @@ int Contract::openValue() const
 void Contract::setOpenValue(int openValue)
 {
     m_openValue = openValue;
+    emit openValueChanged();
 }
 
 QDateTime Contract::deleted() const

@@ -8,7 +8,7 @@ Person::Person(QObject *parent) :
     m_age(-1)
 {
     QStringList cnames;
-    cnames << "validFrom" << "validTo";
+    cnames << "validFrom" << "validTo" << "openValue";
     m_contracts = new QObjectListModel("id", cnames, QList<QObject*>(), this);
 
     QStringList anames;

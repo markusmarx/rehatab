@@ -88,7 +88,9 @@ Item {
                 color: yellow
                 width: 150
                 height: 50
-                Text {anchors.fill: parent; text: validFrom + ", " + validTo}
+                Text {anchors.fill: parent;
+                    text: Qt.formatDate(validFrom, "dd.MM.yyyy")
+                          + ", " + Qt.formatDate(validTo, "dd.MM.yyyy") + " ("+openValue+")"}
 
                 MouseArea {
                     anchors.fill: parent

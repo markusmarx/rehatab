@@ -16,7 +16,7 @@ class Contract : public QDjangoModel
     Q_PROPERTY(int type READ type WRITE setType)
     Q_PROPERTY(Person* client READ client WRITE setClient)
     Q_PROPERTY(QDateTime deleted READ deleted WRITE setDeleted)
-    Q_PROPERTY(int openValue READ openValue WRITE setOpenValue)
+    Q_PROPERTY(int openValue READ openValue WRITE setOpenValue NOTIFY openValueChanged)
 
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=contractId")
     Q_CLASSINFO("client", "db_column=clientId")
@@ -45,6 +45,7 @@ public:
     void setClient(Person* client);
     
 signals:
+    void openValueChanged();
     
 private:
     int m_id;
