@@ -206,6 +206,7 @@ Component {
     id:comp_groupform
     Rectangle {
         property alias _group: groupform._group
+        property alias currentDate: groupform.currentDate
         anchors.fill: parent
         GroupForm {
         id:groupform

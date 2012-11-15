@@ -29,6 +29,7 @@ Item {
 
         _group.iteration = iteration;
         if (mode == 1) {
+            console.log(currentDate);
             groupController.saveGroup(_group, currentDate)
         } else {
             groupController.saveGroup(_group)

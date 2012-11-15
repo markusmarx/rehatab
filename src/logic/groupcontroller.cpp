@@ -78,17 +78,38 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
 
     }
 
-    PersonGroupHistory* pgH;
+    QScopedPointer<PersonGroupHistory> pgH(new PersonGroupHistory());
     QDjangoQuerySet<Group2Person> qs2;
-    qs2.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id()) && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant()) ||
+    qs2 = qs2.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id()) && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant()) ||
                                                                                        QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, QDateTime::currentDateTime())));
+
+    QHash<int, int> person2Group;
+    QStringList fields;
+    fields << "id" << "client_id";
+    foreach (QVariantMap v, qs2.values(fields)) {
+        person2Group[v.value("client_id").toInt()] = v.value("id").toInt();
+    }
+
 
     foreach(QObject* obj, group->personList()->list()) {
         Person* p = qobject_cast<Person*>(obj);
 
 
         QDjangoQuerySet<PersonGroupHistory> qsPresence;
-        qsPresence.get(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, qs.at(i)->id()) && QDjangoWhere("date", QDjangoWhere::Equals, date));
+        qsPresence = qsPresence.filter(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, person2Group[p->id()])
+                                       && QDjangoWhere("date", QDjangoWhere::Equals, date));
+        if (qsPresence.count() > 0) {
+            QVariantMap updateValues;
+            updateValues["present"] = p->presence();
+            qsPresence.update(updateValues);
+        } else {
+            pgH->setPresent(p->presence()?1:0);
+            pgH->setDate(date);
+            Group2Person  *pg2 = new Group2Person();
+            pg2->setId(person2Group[p->id()]);
+            pgH->setGroup2Person(pg2);
+            pgH->save();
+        }
 
     }
 
@@ -165,6 +186,7 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
 
                 pgH = qsh.get(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, qs.at(i)->id()) && QDjangoWhere("date", QDjangoWhere::Equals, date));
                 if (pgH) {
+                    qDebug() << pgH->present();
                     p->setPresence(pgH->present());
                 } else {
                     p->setPresence(false);

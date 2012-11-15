@@ -19,7 +19,7 @@ public:
 
     Q_PROPERTY(int id READ id WRITE setId)
     Q_PROPERTY(QDateTime date READ date WRITE setDate)
-    Q_PROPERTY(bool present READ present WRITE present)
+    Q_PROPERTY(bool present READ present WRITE setPresent)
     Q_PROPERTY(Group2Person* group2Person READ group2Person WRITE setGroup2Person)
 
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=personGroupHistoryId")
@@ -43,7 +43,7 @@ public:
 
     Group2Person* group2Person() const
     {
-        return m_group2person;
+        return qobject_cast<Group2Person*>(foreignKey("group2Person"));
     }
 
 signals:
@@ -58,13 +58,14 @@ public slots:
     {
         m_date = arg;
     }
-    void present(bool arg)
-    {
-        m_present = arg;
-    }
+
     void setGroup2Person(Group2Person* arg)
     {
-        m_group2person = arg;
+        setForeignKey("group2Person", arg);
+    }
+    void setPresent(bool arg)
+    {
+        m_present = arg;
     }
 };
 
