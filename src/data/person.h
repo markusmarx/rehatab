@@ -16,7 +16,8 @@ public:
     Q_PROPERTY(QString forename READ forename WRITE setForename)
     Q_PROPERTY(QDate birth READ birth WRITE setBirth)
     Q_PROPERTY(int id READ id WRITE setId)
-    Q_PROPERTY(int age READ age)
+    Q_PROPERTY(int age READ age CONSTANT)
+    Q_PROPERTY(int sex READ sex WRITE setSex)
     Q_PROPERTY(QDateTime updated READ updated WRITE setUpdated)
     Q_PROPERTY(QDateTime created READ created WRITE setCreated)
     Q_PROPERTY(QDateTime deleted READ deleted WRITE setDeleted)
@@ -49,6 +50,9 @@ public:
 
     int age() const;
 
+    int sex() const;
+    void setSex(int sex);
+
     QDateTime updated() const;
     void setUpdated(QDateTime updated);
     QDateTime created() const;
@@ -78,6 +82,7 @@ private:
     QObjectListModel *m_contracts;
     QObjectListModel *m_appointments;
     bool m_presence;
+    int m_sex;
     
 };
 

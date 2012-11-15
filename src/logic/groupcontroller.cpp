@@ -50,7 +50,9 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
     group->setValidFrom(group->date());
     group->save();
 
-
+    //
+    // remove clients from group that marked as deleted
+    //
     QList<QObject*> removedList = group->personList()->removedObjects();
 
     QVariantList pIds;
@@ -70,18 +72,20 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
     map["validTo"] = QDateTime::currentDateTime();
     qs.update(map);
 
-
+    //
+    // update presence
+    // TODO add new clients
+    //
     QList<QObject*> personList = group->personList()->list();
     Person* person;
     foreach(QObject* obj, personList) {
         person = qobject_cast<Person*>(obj);
-
     }
 
     QScopedPointer<PersonGroupHistory> pgH(new PersonGroupHistory());
     QDjangoQuerySet<Group2Person> qs2;
     qs2 = qs2.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id()) && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant()) ||
-                                                                                       QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, QDateTime::currentDateTime())));
+                                                                                           QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, QDateTime::currentDateTime())));
 
     QHash<int, int> person2Group;
     QStringList fields;
@@ -94,21 +98,22 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
     foreach(QObject* obj, group->personList()->list()) {
         Person* p = qobject_cast<Person*>(obj);
 
-
-        QDjangoQuerySet<PersonGroupHistory> qsPresence;
-        qsPresence = qsPresence.filter(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, person2Group[p->id()])
-                                       && QDjangoWhere("date", QDjangoWhere::Equals, date));
-        if (qsPresence.count() > 0) {
-            QVariantMap updateValues;
-            updateValues["present"] = p->presence();
-            qsPresence.update(updateValues);
-        } else {
-            pgH->setPresent(p->presence()?1:0);
-            pgH->setDate(date);
-            Group2Person  *pg2 = new Group2Person();
-            pg2->setId(person2Group[p->id()]);
-            pgH->setGroup2Person(pg2);
-            pgH->save();
+        if (date.isValid()) {
+            QDjangoQuerySet<PersonGroupHistory> qsPresence;
+            qsPresence = qsPresence.filter(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, person2Group[p->id()])
+                    && QDjangoWhere("date", QDjangoWhere::Equals, date));
+            if (qsPresence.count() > 0) {
+                QVariantMap updateValues;
+                updateValues["present"] = p->presence();
+                qsPresence.update(updateValues);
+            } else {
+                pgH->setPresent(p->presence()?1:0);
+                pgH->setDate(date);
+                Group2Person  *pg2 = new Group2Person();
+                pg2->setId(person2Group[p->id()]);
+                pgH->setGroup2Person(pg2);
+                pgH->save();
+            }
         }
 
     }
@@ -178,8 +183,14 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
     QDjangoQuerySet<Group2Person> qs;
     QDjangoQuerySet<PersonGroupHistory> qsh;
     PersonGroupHistory* pgH;
-    qs = qs.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id()) && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant()) ||
-                                                                                   QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, QDateTime::currentDateTime())));
+    if (!date.isValid()) {
+        date = QDateTime::currentDateTime();
+    }
+
+    qs = qs.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id())
+                   && (QDjangoWhere("validFrom", QDjangoWhere::LessOrEquals, date)
+                       && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant())
+                       || QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, date))));
     if (qs.count() > 0) {
         qs.selectRelated();
         qDebug() << "found " << qs.size() << " clients";

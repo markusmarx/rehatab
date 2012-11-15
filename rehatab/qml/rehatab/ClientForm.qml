@@ -11,6 +11,7 @@ Item {
     signal close()
 
     onClose: {
+
         client_form.destroy()
     }
 
@@ -36,6 +37,7 @@ Item {
                 personObj.name = input_surname.text
                 personObj.forename = input_forename.text
                 personObj.birth = input_birth.date;
+                personObj.sex = input_sex.sex
                 clientController.savePerson(personObj)
                 close()
         } else {
@@ -62,7 +64,10 @@ Item {
                 }
                 Button {
                     text: "Abbrechen"
-                    onClicked: client_form.close()
+                    onClicked: {
+                        focus = true
+                        client_form.close()
+                    }
                 }
             }
 
@@ -243,6 +248,15 @@ Item {
 
                     Row {
                         id:input_sex
+                        property int sex
+
+                        onSexChanged: {
+                            if (sex == 1) {
+                                input_female.checked = true;
+                            } else if (sex == 2){
+                                input_male.checked = true;
+                            }
+                        }
 
                         function validate() {
 
@@ -261,8 +275,10 @@ Item {
                             height: input_birth.height-1
 
                             onCheckedChanged: {
-                                if (checked)
+                                if (checked) {
                                     input_male.checked = false
+                                    parent.sex = 1;
+                                }
                                 if (parent.parent.error)
                                     parent.validate()
 
@@ -283,8 +299,10 @@ Item {
                             onContainsMouseChanged:
                                 FormUtils.fnShowOrHideErrorMessage(containsMouse, parent.parent)
                             onCheckedChanged: {
-                                if (checked)
+                                if (checked) {
                                     input_female.checked = false
+                                    parent.sex = 2;
+                                }
                                 if (parent.parent.error)
                                     parent.validate()
                             }

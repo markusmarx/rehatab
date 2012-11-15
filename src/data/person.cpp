@@ -64,6 +64,16 @@ int Person::age() const
     return m_age;
 }
 
+int Person::sex() const
+{
+    return m_sex;
+}
+
+void Person::setSex(int sex)
+{
+    m_sex = sex;
+}
+
 QDateTime Person::updated() const
 {
     return m_updated;

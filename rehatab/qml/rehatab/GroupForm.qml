@@ -153,7 +153,31 @@ Item {
                 }
             }
         }
+        DropArea {
+            id: groupform_DropArea
+            anchors.top: groupform_input.bottom
+            anchors.topMargin: 20
+            width: parent.width
+            anchors.bottom: parent.bottom
+            anchors.fill: parent
+            onDragEnter: {
+                parent.color = "yellow"
 
+            }
+            onDragLeave: {
+                parent.color = "grey"
+            }
+
+            onDrop: {
+                event.accept(Qt.LinkAction);
+                var contractList = clientController.getContracts(event.data.text)
+                if (!Qt.isQtObject(_group.personList.findById(event.data.text)))
+                    _group.personList.append(clientController.getPerson(event.data.text))
+
+                //comp_contractList.createObject(group_overview, {list: contractList})
+                //fnLinkPersonToGroup(event.data.text, id)
+            }
+        }
         Flow {
             id:groupform_clientlist
             anchors.top: groupform_input.bottom
@@ -171,7 +195,8 @@ Item {
 
                     Component.onCompleted: {
                         _person = _group.personList.findById(id);
-                        _contract = clientController.loadContract(_person.contracts.at(0));
+                        if (_person.contracts.size() > 0)
+                            _contract = clientController.loadContract(_person.contracts.at(0));
                     }
 
                     PersonDelegateSmall {
@@ -179,6 +204,7 @@ Item {
                     }
                     MouseArea {
                         anchors.fill: parent
+                        enabled: mode==0
                         onClicked: {
                             _group.personList.remove(id)
                         }
@@ -190,12 +216,18 @@ Item {
                         onCheckedChanged: {
                             if (Qt.isQtObject(_group)) {
                                 _person.presence = checked
+                                if (!Qt.isQtObject(_contract)) return;
+                                if (checked) {
+                                    _contract.openValue -= 1
+                                } else {
+                                    _contract.openValue += 1
+                                }
                             }
                         }
                     }
                     Text {
                         y: 30
-                        text: _contract.openValue
+                        text: Qt.isQtObject(_contract)?_contract.openValue:""
                     }
 
                 }

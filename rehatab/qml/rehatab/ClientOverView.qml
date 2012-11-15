@@ -85,7 +85,7 @@ Item {
             anchors.fill: parent
             model: _person.contracts
             delegate: Rectangle {
-                color: yellow
+                color: "yellow"
                 width: 150
                 height: 50
                 Text {anchors.fill: parent;
@@ -100,10 +100,7 @@ Item {
                     }
                 }
             }
-
-
         }
-
     }
 
     Component {

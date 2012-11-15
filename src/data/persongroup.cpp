@@ -7,7 +7,7 @@ PersonGroup::PersonGroup(QObject *parent) :
 {
 
     QStringList pnames;
-    pnames << "name" << "forename";
+    pnames << "name" << "forename" << "age" << "birth";
     m_personList = new QObjectListModel("id", pnames, QList<QObject*>(), this);
     setForeignKey("appointment", new Appointment(this));
 }
