@@ -43,7 +43,7 @@ bool ClientController::savePerson(Person *person)
 {
     bool isNew = false;
     if (person->id() <0 ) {
-        person->setCreated(QDateTime::currentDateTime());
+        person->setValidFrom(QDateTime::currentDateTime());
         isNew = true;
     }
     bool res = person->save();
@@ -62,7 +62,6 @@ bool ClientController::savePerson(Person *person)
     if (isNew) {
         m_personList->append(person);
     }
-
 }
 
 Person *ClientController::loadPerson(Person *person)
@@ -82,13 +81,16 @@ Person *ClientController::getPerson(int personId)
 
 bool ClientController::removePerson(Person *person)
 {
-    person->setDeleted(QDateTime::currentDateTime());
+    person->setValidTo(QDateTime::currentDateTime());
     return person->save();
 }
 
 bool ClientController::saveContract(Contract *contract, Person* person)
 {
     contract->setClient(person);
+    QDateTime d = contract->validTo();
+    d.setTime(QTime(23, 59, 59));
+    contract->setValidTo(d);
     if (contract->id() < 0) {
         person->contracts()->append(contract);
     }
@@ -152,8 +154,7 @@ QList<QObject *> ClientController::getContracts(int personId)
 
 bool ClientController::removeContract(Contract *contract)
 {
-    contract->setDeleted(QDateTime::currentDateTime());
-    contract->save();
+    contract->remove();
     return true;
 }
 

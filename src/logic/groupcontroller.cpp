@@ -140,7 +140,7 @@ QObjectListModel *GroupController::allGroups()
     return m_allGroups;
 }
 
-bool GroupController::addPersonToGroup(Person* person, PersonGroup* group)
+bool GroupController::addPersonToGroup(Person* person, PersonGroup* group, bool save)
 {
     qDebug() << Q_FUNC_INFO << person << group;
 
@@ -153,18 +153,18 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group)
         return true;
     }
 
-    QScopedPointer<Group2Person> gp(new Group2Person(this));
-    QDjangoQuerySet<Person> pqs;
-    QDjangoQuerySet<PersonGroup> pgqs;
-    gp->setClient(pqs.get(QDjangoWhere("id", QDjangoWhere::Equals, person->id())));
-    gp->setPersonGroup(pgqs.get(QDjangoWhere("id", QDjangoWhere::Equals, group->id())));
-    gp->setValidFrom(QDateTime::currentDateTime());
     if (person->contracts()->list().size() > 0) {
         foreach (QObject* obj, person->contracts()->list()) {
             Contract* c = qobject_cast<Contract*>(obj);
-            if (QDate::currentDate().daysTo(c->validTo()) >= 0) {
-                gp->setContract(c);
-                gp->save();
+            if (c->valid()) {
+                if (save) {
+                    QScopedPointer<Group2Person> gp(new Group2Person(this));
+                    gp->setClient(new Person(this, person->id()));
+                    gp->setPersonGroup(new PersonGroup(this, group->id()));
+                    gp->setValidFrom(QDateTime::currentDateTime());
+                    gp->setContract(c);
+                    gp->save();
+                }
                 break;
             }
         }
@@ -219,9 +219,12 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
     }
 
     return group;
+}
 
-
-
+PersonGroup *GroupController::getGroup(int id)
+{
+    QDjangoQuerySet<PersonGroup> qs;
+    return qs.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
 }
 
 PersonGroup *GroupController::findByAppointmentId(int id)

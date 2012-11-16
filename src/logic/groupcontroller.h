@@ -17,8 +17,9 @@ public:
     Q_INVOKABLE PersonGroup* createGroup();
     Q_INVOKABLE bool saveGroup(PersonGroup* group, QDateTime date = QDateTime());
     Q_INVOKABLE QObjectListModel* allGroups();
-    Q_INVOKABLE bool addPersonToGroup(Person* person, PersonGroup* group);
+    Q_INVOKABLE bool addPersonToGroup(Person* person, PersonGroup* group, bool save = true);
     Q_INVOKABLE PersonGroup* loadGroup(PersonGroup* group, QDateTime date = QDateTime());
+    Q_INVOKABLE PersonGroup* getGroup(int id);
     Q_INVOKABLE PersonGroup* findByAppointmentId(int id);
 signals:
     

@@ -46,7 +46,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QScopedPointer<QApplication> app(createApplication(argc, argv));
     app->addLibraryPath(app->applicationDirPath() + "/plugins");
 
-    QDjangoDatabaseManager *dbm = new QDjangoDatabaseManager(DatabaseManager::SQLITE, "", "rehatab.db", "default");
+    QDjangoDatabaseManager *dbm = new QDjangoDatabaseManager(DatabaseManager::SQLITE, "", "rehatab.db.1", "default");
 
     dbm->open("", "", false);
 

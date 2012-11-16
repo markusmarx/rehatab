@@ -2,8 +2,8 @@
 #include "qobjectlistmodel.h"
 #include "appointment.h"
 #include <QDebug>
-PersonGroup::PersonGroup(QObject *parent) :
-    QDjangoModel(parent), m_id(-1)
+PersonGroup::PersonGroup(QObject *parent, int id) :
+    QDjangoModel(parent), m_id(id)
 {
 
     QStringList pnames;

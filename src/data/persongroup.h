@@ -35,7 +35,7 @@ class PersonGroup : public QDjangoModel
     int m_id;
 
 public:
-    explicit PersonGroup(QObject *parent = 0);
+    explicit PersonGroup(QObject *parent = 0, int id=-1);
     Q_PROPERTY(int id READ id WRITE setId)
     Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QDateTime date READ date WRITE setDate)
@@ -52,6 +52,7 @@ public:
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=groupId")
     Q_CLASSINFO("name", "max_length=255")
     Q_CLASSINFO("appointment", "db_column=appointmentId")
+    Q_CLASSINFO("validTo", "null=true")
     Q_CLASSINFO("personList","ignore_field=true")
     Q_CLASSINFO("time", "ignore_field=true")
 

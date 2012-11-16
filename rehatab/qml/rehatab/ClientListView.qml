@@ -34,10 +34,10 @@ Item {
         snapMode: ListView.SnapToItem
         model: clientController.personList()
         highlightMoveDuration:500
+        currentIndex: -1
 
         Component.onCompleted: {
             currentIndex = -1
-
         }
 
         onCurrentIndexChanged: {
@@ -189,8 +189,7 @@ Item {
         id: highlighter
         width: parent.width - 5
         height: 84
-        opacity: 1
-
+        opacity: 0
         z:1
 
         Image {

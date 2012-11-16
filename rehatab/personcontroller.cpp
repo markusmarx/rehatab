@@ -39,7 +39,7 @@ Person* PersonController::activePerson() const {
 
 void PersonController::saveActivePerson(Person* person)
 {
-    person->setCreated(QDateTime::currentDateTime());
+    person->setValidFrom(QDateTime::currentDateTime());
     person->save();
     m_personList->update(person);
 

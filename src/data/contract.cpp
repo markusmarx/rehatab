@@ -18,22 +18,22 @@ void Contract::setId(int id)
     m_id = id;
 }
 
-QDate Contract::validFrom() const
+QDateTime Contract::validFrom() const
 {
     return m_validFrom;
 }
 
-void Contract::setValidFrom(QDate validFrom)
+void Contract::setValidFrom(QDateTime validFrom)
 {
     m_validFrom = validFrom;
 }
 
-QDate Contract::validTo() const
+QDateTime Contract::validTo() const
 {
     return m_validTo;
 }
 
-void Contract::setValidTo(QDate validTo)
+void Contract::setValidTo(QDateTime validTo)
 {
     m_validTo = validTo;
 }
@@ -69,14 +69,9 @@ void Contract::setOpenValue(int openValue)
     emit openValueChanged();
 }
 
-QDateTime Contract::deleted() const
+bool Contract::valid() const
 {
-    return m_deleted;
-}
-
-void Contract::setDeleted(QDateTime deleted)
-{
-    m_deleted = deleted;
+    return QDate::currentDate().daysTo(validTo().date()) >= 0 && m_openValue > 0;
 }
 
 Person *Contract::client()

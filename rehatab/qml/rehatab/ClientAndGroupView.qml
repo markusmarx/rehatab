@@ -24,15 +24,14 @@ Item {
                 _currentView.destroy()
 
             if (_lastSelectedClientId >= 0) {
-                _currentView = comp_clientoverview.createObject(pag_contentarea, {opacity:1,
+                _currentView = comp_clientoverview.createObject(pag_contentarea, {opacity:0,
                                                                 _person: clientController.loadPerson(clientController.getPerson(_lastSelectedClientId))
                                                                     } )
                 //_currentView.fnLoadClient(_lastSelectedClientId);
                 _currentView.forceActiveFocus()
                 _currentView.opacity = 1
-            } else {
-                _currentView.destroy()
             }
+
 
         }
 
@@ -58,7 +57,7 @@ Item {
             _currentView.destroy();
         }
 
-        _currentView = comp_groupform.createObject(pag_contentarea, {_group: groupController.loadGroup(groupController.allGroups().findById(groupId))})
+        _currentView = comp_groupform.createObject(pag_contentarea, {_group: groupController.loadGroup(groupController.getGroup(groupId))})
         _currentView.fnLoadGroup()
     }
 
