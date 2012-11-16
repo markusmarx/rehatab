@@ -159,12 +159,7 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group, bool 
             if (c->valid()) {
                 if (save) {
                     QScopedPointer<Group2Person> gp(new Group2Person(this));
-//                    QDjangoQuerySet<Person> pqs;
-//                    QDjangoQuerySet<PersonGroup> pgqs;
-
-                    //gp->setClient(pqs.get(QDjangoWhere("id", QDjangoWhere::Equals, person->id())));
                     gp->setClient(new Person(this, person->id()));
-                    //gp->setPersonGroup(pgqs.get(QDjangoWhere("id", QDjangoWhere::Equals, group->id())));
                     gp->setPersonGroup(new PersonGroup(this, group->id()));
                     gp->setValidFrom(QDateTime::currentDateTime());
                     gp->setContract(c);
