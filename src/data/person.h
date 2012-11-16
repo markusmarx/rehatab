@@ -18,9 +18,8 @@ public:
     Q_PROPERTY(int id READ id WRITE setId)
     Q_PROPERTY(int age READ age CONSTANT)
     Q_PROPERTY(int sex READ sex WRITE setSex)
-    Q_PROPERTY(QDateTime updated READ updated WRITE setUpdated)
-    Q_PROPERTY(QDateTime created READ created WRITE setCreated)
-    Q_PROPERTY(QDateTime deleted READ deleted WRITE setDeleted)
+    Q_PROPERTY(QDateTime validFrom READ validFrom WRITE setValidFrom)
+    Q_PROPERTY(QDateTime validTo READ validTo WRITE setValidTo)
     Q_PROPERTY(QObjectListModel* appointments READ appointments)
     Q_PROPERTY(QObjectListModel* contracts READ contracts)
     Q_PROPERTY(bool presence READ presence WRITE setPresence)
@@ -30,8 +29,8 @@ public:
     Q_CLASSINFO("forename", "max_length=255")
     Q_CLASSINFO("birth", "ignore_field=false")
     Q_CLASSINFO("age", "ignore_field=true")
-    Q_CLASSINFO("updated", "null=true")
-    Q_CLASSINFO("deleted", "null=true")
+    Q_CLASSINFO("validFrom", "null=false")
+    Q_CLASSINFO("validTo", "null=true")
     Q_CLASSINFO("contracts", "ignore_field=true")
     Q_CLASSINFO("appointments", "ignore_field=true")
     Q_CLASSINFO("presence", "ignore_field=true")
@@ -55,10 +54,10 @@ public:
 
     QDateTime updated() const;
     void setUpdated(QDateTime updated);
-    QDateTime created() const;
-    void setCreated(QDateTime created);
-    QDateTime deleted() const;
-    void setDeleted(QDateTime deleted);
+    QDateTime validFrom() const;
+    void setValidFrom(QDateTime validFrom);
+    QDateTime validTo() const;
+    void setValidTo(QDateTime validTo);
 
     void setAppointments(QList<QObject*> appointments);
     void setContracts(QList<QObject*> contracts);

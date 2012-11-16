@@ -5,7 +5,6 @@
 #include <QDateTime>
 #include "QDjangoModel.h"
 
-
 class Person;
 class PersonGroup;
 class Contract;
@@ -32,6 +31,7 @@ public:
     Q_CLASSINFO("client", "db_column=clientId")
     Q_CLASSINFO("contract", "db_column=contractId")
     Q_CLASSINFO("personGroup", "db_column=groupId")
+    Q_CLASSINFO("validTo", "null=true")
 
     int id() const;
     void setId(int id);

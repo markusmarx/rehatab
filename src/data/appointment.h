@@ -26,6 +26,8 @@ class Appointment : public QDjangoModel
     Q_CLASSINFO("name", "max_length=255")
     Q_CLASSINFO("description", "max_length=1000 null=true")
     Q_CLASSINFO("time", "ignore_field=true")
+    Q_CLASSINFO("validTo", "null=true")
+
 public:
     explicit Appointment(QObject *parent = 0);
 

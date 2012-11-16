@@ -52,6 +52,7 @@ public:
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=groupId")
     Q_CLASSINFO("name", "max_length=255")
     Q_CLASSINFO("appointment", "db_column=appointmentId")
+    Q_CLASSINFO("validTo", "null=true")
     Q_CLASSINFO("personList","ignore_field=true")
     Q_CLASSINFO("time", "ignore_field=true")
 

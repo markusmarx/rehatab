@@ -162,7 +162,7 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group)
     if (person->contracts()->list().size() > 0) {
         foreach (QObject* obj, person->contracts()->list()) {
             Contract* c = qobject_cast<Contract*>(obj);
-            if (QDate::currentDate().daysTo(c->validTo()) >= 0) {
+            if (QDate::currentDate().daysTo(c->validTo().date()) >= 0) {
                 gp->setContract(c);
                 gp->save();
                 break;

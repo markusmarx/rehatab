@@ -84,22 +84,22 @@ void Person::setUpdated(QDateTime updated)
     m_updated = updated;
 }
 
-QDateTime Person::created() const
+QDateTime Person::validFrom() const
 {
     return m_created;
 }
 
-void Person::setCreated(QDateTime created)
+void Person::setValidFrom(QDateTime created)
 {
     m_created = created;
 }
 
-QDateTime Person::deleted() const
+QDateTime Person::validTo() const
 {
     return m_deleted;
 }
 
-void Person::setDeleted(QDateTime deleted)
+void Person::setValidTo(QDateTime deleted)
 {
     m_deleted = deleted;
 }

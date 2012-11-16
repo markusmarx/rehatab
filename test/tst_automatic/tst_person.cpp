@@ -32,7 +32,7 @@ void tst_Person::tst_PersonCRUD()
     p->setName("testname");
     p->setForename("foreneme");
     p->setBirth(getDate("15.03.1976"));
-    p->setCreated(QDateTime::currentDateTime());
+    p->setValidFrom(QDateTime::currentDateTime());
 //    p->setDeleted(QDateTime::currentDateTime());
 //    p->setUpdated(QDateTime::currentDateTime());
     clC->savePerson(p);
@@ -43,8 +43,8 @@ void tst_Person::tst_PersonCRUD()
     QCOMPARE(p->name(), p2->name());
 
     Contract* contract =clC->createContract();
-    contract->setValidFrom(getDate("01.10.2012"));
-    contract->setValidTo(getDate("01.10.2013"));
+    contract->setValidFrom(QDateTime(getDate("01.10.2012")));
+    contract->setValidTo(QDateTime(getDate("01.10.2013")));
     contract->setType(0);
     contract->setValue(50);
     clC->saveContract(contract, p);
