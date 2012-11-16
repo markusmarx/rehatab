@@ -69,6 +69,11 @@ void Contract::setOpenValue(int openValue)
     emit openValueChanged();
 }
 
+bool Contract::valid() const
+{
+    return QDate::currentDate().daysTo(validTo().date()) >= 0 && m_openValue > 0;
+}
+
 Person *Contract::client()
 {
     return qobject_cast<Person*>(foreignKey("client"));

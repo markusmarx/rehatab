@@ -3,8 +3,8 @@
 
 #include "QDjangoQuerySet.h"
 #include <QDebug>
-Person::Person(QObject *parent) :
-    QDjangoModel(parent), m_id(-1),
+Person::Person(QObject *parent, int id) :
+    QDjangoModel(parent), m_id(id),
     m_age(-1)
 {
     QStringList cnames;

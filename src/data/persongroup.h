@@ -35,7 +35,7 @@ class PersonGroup : public QDjangoModel
     int m_id;
 
 public:
-    explicit PersonGroup(QObject *parent = 0);
+    explicit PersonGroup(QObject *parent = 0, int id=-1);
     Q_PROPERTY(int id READ id WRITE setId)
     Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QDateTime date READ date WRITE setDate)

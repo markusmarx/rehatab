@@ -10,7 +10,8 @@ class Person : public QDjangoModel
     Q_OBJECT
 
 public:
-    explicit Person(QObject *parent = 0);
+    explicit Person(QObject *parent = 0, int id = -1);
+
 
     Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QString forename READ forename WRITE setForename)

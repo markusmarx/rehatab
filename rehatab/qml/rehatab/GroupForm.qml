@@ -171,8 +171,9 @@ Item {
             onDrop: {
                 event.accept(Qt.LinkAction);
                 var contractList = clientController.getContracts(event.data.text)
-                if (!Qt.isQtObject(_group.personList.findById(event.data.text)))
-                    _group.personList.append(clientController.getPerson(event.data.text))
+                if (!Qt.isQtObject(_group.personList.findById(event.data.text))) {
+                    groupController.addPersonToGroup(group, person, false)
+                }
 
                 //comp_contractList.createObject(group_overview, {list: contractList})
                 //fnLinkPersonToGroup(event.data.text, id)
