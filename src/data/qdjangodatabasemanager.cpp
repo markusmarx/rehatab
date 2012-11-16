@@ -27,7 +27,7 @@ bool QDjangoDatabaseManager::open(QString user, QString passwd, bool async)
         QDjango::registerModel<PersonGroupHistory>();
         QDjango::setDatabase(QSqlDatabase::database(m_connName));
         QDjango::setDebugEnabled(true);
-        //QDjango::createTables();
+        QDjango::createTables();
     }
     return open;
 }
