@@ -26,7 +26,7 @@ class Contract : public QDjangoModel
     Q_CLASSINFO("valid", "ignore_field=true")
 
 public:
-    explicit Contract(QObject *parent = 0);
+    explicit Contract(QObject *parent = 0, int id = -1);
 
     int id() const;
     void setId(int id);

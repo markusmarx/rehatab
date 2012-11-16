@@ -1,8 +1,8 @@
 #include "contract.h"
 #include "person.h"
 
-Contract::Contract(QObject *parent) :
-    QDjangoModel(parent), m_id(-1)
+Contract::Contract(QObject *parent, int id) :
+    QDjangoModel(parent), m_id(id)
 {
     setForeignKey("client", new Person);
 

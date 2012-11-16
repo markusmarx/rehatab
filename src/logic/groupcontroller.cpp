@@ -98,6 +98,15 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
     foreach(QObject* obj, group->personList()->list()) {
         Person* p = qobject_cast<Person*>(obj);
 
+        if (!person2Group.contains(p->id())) {
+            QScopedPointer<Group2Person> gp(new Group2Person(this));
+            gp->setClient(new Person(this, p->id()));
+            gp->setPersonGroup(new PersonGroup(this, group->id()));
+            gp->setValidFrom(QDateTime::currentDateTime());
+            gp->setContract(new Contract(this, qobject_cast<Contract*>(p->contracts()->at(0))->id()));
+            gp->save();
+        }
+
         if (date.isValid()) {
             QDjangoQuerySet<PersonGroupHistory> qsPresence;
             qsPresence = qsPresence.filter(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, person2Group[p->id()])
@@ -164,6 +173,11 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group, bool 
                     gp->setValidFrom(QDateTime::currentDateTime());
                     gp->setContract(c);
                     gp->save();
+                } else {
+                    QList<QObject*> cl;
+                    cl.append(c);
+                    person->setContracts(cl);
+                    group->personList()->append(person);
                 }
                 break;
             }
