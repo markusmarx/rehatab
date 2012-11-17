@@ -82,7 +82,7 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
         person = qobject_cast<Person*>(obj);
     }
 
-    QScopedPointer<PersonGroupHistory> pgH(new PersonGroupHistory());
+
     QDjangoQuerySet<Group2Person> qs2;
     qs2 = qs2.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id()) && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant()) ||
                                                                                            QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, QDateTime::currentDateTime())));
@@ -99,11 +99,15 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
         Person* p = qobject_cast<Person*>(obj);
 
         if (!person2Group.contains(p->id())) {
-            QScopedPointer<Group2Person> gp(new Group2Person(this));
+            Contract *c = qobject_cast<Contract*>(p->contracts()->at(0));
+            QDjangoQuerySet<Group2Person> qs3;
+            Group2Person *gpp = qs3.get(QDjangoWhere("contract_id", QDjangoWhere::Equals, c->id()));
+            QScopedPointer<Group2Person> gp(gpp?gpp:new Group2Person(this));
             gp->setClient(new Person(this, p->id()));
             gp->setPersonGroup(new PersonGroup(this, group->id()));
-            gp->setValidFrom(qobject_cast<Contract*>(p->contracts()->at(0))->validFrom());
-            gp->setContract(new Contract(this, qobject_cast<Contract*>(p->contracts()->at(0))->id()));
+            gp->setValidFrom(c->validFrom());
+            gp->setValidTo(QDateTime());
+            gp->setContract(new Contract(this, c->id()));
             gp->save();
         }
 
@@ -116,6 +120,7 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
                 updateValues["present"] = p->presence();
                 qsPresence.update(updateValues);
             } else {
+                QScopedPointer<PersonGroupHistory> pgH(new PersonGroupHistory());
                 pgH->setPresent(p->presence()?1:0);
                 pgH->setDate(date);
                 Group2Person  *pg2 = new Group2Person();
@@ -167,10 +172,13 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group, bool 
             Contract* c = qobject_cast<Contract*>(obj);
             if (c->valid()) {
                 if (save) {
-                    QScopedPointer<Group2Person> gp(new Group2Person(this));
+                    QDjangoQuerySet<Group2Person> qs2;
+                    Group2Person *gpp = qs2.get(QDjangoWhere("contract_id", QDjangoWhere::Equals, c->id()));
+                    QScopedPointer<Group2Person> gp(gpp?gpp:new Group2Person(this));
                     gp->setClient(new Person(this, person->id()));
                     gp->setPersonGroup(new PersonGroup(this, group->id()));
                     gp->setValidFrom(c->validFrom());
+                    gp->setValidTo(QDateTime());
                     gp->setContract(c);
                     gp->save();
                 } else {

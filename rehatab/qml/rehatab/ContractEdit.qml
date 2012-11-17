@@ -104,11 +104,11 @@ Rectangle {
                         var validationRules = new Array(1)
                         validationRules[0]
                                 = FormUtils.fnCreateValidationRule(
-                                    parseInt(contract_wValidFrom.text.charAt(1)) > 0,
+                                    parseInt(contract_wValidFrom.text.charAt(0)) >= 0,
                                     qsTr("Ein Datum eingeben!"))
                         validationRules[1]
                                 = FormUtils.fnCreateValidationRule(
-                                    true,
+                                    contract_wValidTo.validDate,
                                     qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
 
                         return FormUtils.fnProcessValidation(validationRules, parent)
@@ -151,11 +151,11 @@ Rectangle {
                         var validationRules = new Array(1)
                         validationRules[0]
                                 = FormUtils.fnCreateValidationRule(
-                                    parseInt(contract_wValidTo.text.charAt(1)) > 0,
+                                    parseInt(contract_wValidTo.text.charAt(0)) >= 0,
                                     qsTr("Ein Datum eingeben!"))
                         validationRules[1]
                                 = FormUtils.fnCreateValidationRule(
-                                    true,
+                                    contract_wValidTo.validDate,
                                     qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
 
                         return FormUtils.fnProcessValidation(validationRules, parent)

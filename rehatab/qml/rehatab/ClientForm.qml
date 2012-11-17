@@ -206,7 +206,7 @@ Rectangle {
                             var validationRules = new Array(1)
                             validationRules[0]
                                     = FormUtils.fnCreateValidationRule(
-                                        parseInt(input_birth.text.charAt(1)) > 0,
+                                        parseInt(input_birth.text.charAt(0)) >= 0,
                                             qsTr("Ein Datum eingeben!"))
                             validationRules[1]
                                     = FormUtils.fnCreateValidationRule(
