@@ -102,7 +102,7 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
             QScopedPointer<Group2Person> gp(new Group2Person(this));
             gp->setClient(new Person(this, p->id()));
             gp->setPersonGroup(new PersonGroup(this, group->id()));
-            gp->setValidFrom(QDateTime::currentDateTime());
+            gp->setValidFrom(qobject_cast<Contract*>(p->contracts()->at(0))->validFrom());
             gp->setContract(new Contract(this, qobject_cast<Contract*>(p->contracts()->at(0))->id()));
             gp->save();
         }
@@ -170,7 +170,7 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group, bool 
                     QScopedPointer<Group2Person> gp(new Group2Person(this));
                     gp->setClient(new Person(this, person->id()));
                     gp->setPersonGroup(new PersonGroup(this, group->id()));
-                    gp->setValidFrom(QDateTime::currentDateTime());
+                    gp->setValidFrom(c->validFrom());
                     gp->setContract(c);
                     gp->save();
                 } else {
