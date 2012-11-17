@@ -52,7 +52,7 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onDoubleClicked: {
+                onClicked: {
                     fnOpenAppointment(id, date, from)
                 }
             }

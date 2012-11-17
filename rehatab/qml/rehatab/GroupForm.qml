@@ -3,7 +3,7 @@ import QmlFeatures 1.0
 import QtDesktop 0.1
 import Rehatab 1.0
 
-Item {
+Rectangle {
     id: form_group
 
     property int weekFlags
@@ -67,7 +67,7 @@ Item {
             Row {
 
                 Button {
-                    text: "Gruppe anlegen"
+                    text: (mode==0)?"Gruppe speichern": "Termin speichern"
                     onClicked: {
                         focus = true
                         fnSaveGroup()
@@ -89,6 +89,7 @@ Item {
                 }
                 TextField {
                     id: input_name
+                     enabled: mode==0
                 }
             }
 
@@ -101,17 +102,34 @@ Item {
 
                 DateEdit {
                     id:input_startDate
+                    enabled: mode==0
                 }
 
             }
 
             Row {
-                TimeEdit {
-                    id:input_starttime
+                LabelLayout {
+                    labelPos: Qt.AlignTop
+                    Label {
+                        text: "um (hh:mm)"
+                    }
+
+                    TimeEdit {
+                        id:input_starttime
+                        enabled: mode==0
+                    }
                 }
+                LabelLayout {
+                    labelPos: Qt.AlignTop
+                    Label {
+                        text: "Dauer in Minuten"
+                    }
+
                 TextField {
                     id:input_minutes
                     validator: IntValidator {}
+                    enabled: mode==0
+                }
                 }
             }
 
@@ -140,6 +158,7 @@ Item {
                             Label {text:name}
                             CheckBox {width: 20
                                 checked: weekFlags & flag
+                                 enabled: mode==0
                                 onCheckedChanged: {
                                     if (checked) {
                                         form_group.weekFlags = form_group.weekFlags | flag
@@ -228,8 +247,14 @@ Item {
                         }
                     }
                     Text {
-                        y: 30
-                        text: Qt.isQtObject(_contract)?_contract.openValue:""
+                        anchors.top: delegate.bottom
+                        anchors.topMargin: 10
+                        anchors.left: delegate.left
+                        anchors.leftMargin: 10
+                        text: Qt.isQtObject(_contract)?_contract.openValue + " offene Sitzungen":""
+                        font.family: main_style.header2Font.family
+                        font.pixelSize: main_style.header2Font.size
+                        color: main_style.header2Font.color
                     }
 
                 }

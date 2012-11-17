@@ -19,7 +19,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: main_style.navigationBg
+        color: "white"
     }
 
     Row {
@@ -84,13 +84,39 @@ Item {
         ListView {
             anchors.fill: parent
             model: _person.contracts
+            header: Text {
+                text: "Verträge"
+            }
+
             delegate: Rectangle {
-                color: "yellow"
-                width: 150
+                color: "grey"
+                width: 200
                 height: 50
-                Text {anchors.fill: parent;
-                    text: Qt.formatDate(validFrom, "dd.MM.yyyy")
-                          + ", " + Qt.formatDate(validTo, "dd.MM.yyyy") + " ("+openValue+")"}
+                Column {
+                    Row {
+                LabelLayout {
+                    labelPos: Qt.AlignTop
+                    Label {
+                        text: "Startdatum"
+                    }
+                    Text {
+                        text: Qt.formatDate(validFrom, "dd.MM.yyyy")+ " - "
+                    }
+                }
+                LabelLayout {
+                    labelPos: Qt.AlignTop
+                    Label {
+                        text: "Enddatum"
+                    }
+                    Text {
+                        text: Qt.formatDate(validTo, "dd.MM.yyyy")
+                    }
+                }
+                }
+                }
+//                Text {anchors.fill: parent;
+//                    text:
+//                          + ", " + Qt.formatDate(validTo, "dd.MM.yyyy") + " ("+openValue+")"}
 
                 MouseArea {
                     anchors.fill: parent

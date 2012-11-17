@@ -4,7 +4,7 @@ import QmlFeatures 1.0
 
 Item {
     width: 246
-    height: 106
+    height: 50
 
     function fnCopy(item) {
         item.name = name
@@ -14,21 +14,21 @@ Item {
     }
 
 
-    Image {
-        anchors.top: parent.top
-        anchors.topMargin: 10
-        anchors.left: parent.left
-        anchors.leftMargin: 5
+//    Image {
+//        anchors.top: parent.top
+//        anchors.topMargin: 10
+//        anchors.left: parent.left
+//        anchors.leftMargin: 5
 
-        id:personImage
-        source: "content/user.png"
-    }
+//        id:personImage
+//        source: "content/user.png"
+//    }
 
     Column {
         spacing: 2
         anchors {
             top: parent.top
-            left: personImage.right
+            left: parent.left
             leftMargin: 10
             right: parent.right
             bottom: parent.bottom
@@ -47,10 +47,8 @@ Item {
             Text {
                 id:wName
                 text:name + ", "
-                color: "black"
-                font.family: "Arial"
-                font.pointSize: 10
-                font.bold: true
+                color: wForename.color
+                font: wForename.font
                 elide: Text.ElideRight
                 onTextChanged: parent.updateElide()
 
@@ -58,10 +56,10 @@ Item {
             Text {
                 id:wForename
                 text:forename
-                color: "black"
-                font.family: "Arial"
-                font.pointSize: 10
+                font.family: main_style.header1Font.family
+                font.pixelSize: main_style.header1Font.size
                 font.bold: true
+                color: main_style.header1Font.color
                 elide: Text.ElideRight
                 onTextChanged: parent.updateElide()
 
@@ -69,9 +67,11 @@ Item {
 
         }
         Text {
-            text:"Alter: " + age + " (" + Qt.formatDate(birth, "dd.MM.yyyy") + ")"
+            text:"*"+Qt.formatDate(birth, "dd.MM.yyyy") + " ("+age+" Jahre)"
+            font.family: main_style.header2Font.family
+            font.pixelSize: main_style.header2Font.size
+            color: main_style.header2Font.color
 
-            color: "black"
         }
 //        Text {
 //            text: "Rezept:" + recept

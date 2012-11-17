@@ -122,18 +122,18 @@ Item {
             onClicked: fnShowNewClientForm()
         }
 
-        TextField {
-            id:input_clientsearch
-            anchors.top: btn_newclient.bottom
-            anchors.topMargin: 5
+//        TextField {
+//            id:input_clientsearch
+//            anchors.top: btn_newclient.bottom
+//            anchors.topMargin: 5
 
-            width: parent.width-10
+//            width: parent.width-10
 
-        }
+//        }
 
         ClientListView {
             id: lst_view
-            anchors.top: input_clientsearch.bottom
+            anchors.top: btn_newclient.bottom
             anchors.topMargin: 5
             anchors.bottom: parent.bottom
             anchors.left: parent.left
