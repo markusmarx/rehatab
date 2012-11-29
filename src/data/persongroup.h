@@ -13,7 +13,6 @@ class PersonGroup : public QDjangoModel
 {
     Q_OBJECT
 
-
     QString m_name;
 
     QDateTime m_validTo;
@@ -30,9 +29,12 @@ class PersonGroup : public QDjangoModel
 
     QHash<int, QVariantList> m_personData;
 
+
     //QByteArray m_data;
 
     int m_id;
+
+    int m_clientCount;
 
 public:
     explicit PersonGroup(QObject *parent = 0, int id=-1);
@@ -48,13 +50,14 @@ public:
     Q_PROPERTY(Appointment* appointment READ appointment WRITE setAppointment)
 
     Q_PROPERTY(QObjectListModel* personList READ personList)
-
+    Q_PROPERTY(int clientCount READ clientCount WRITE setClientCount NOTIFY clientCountChanged)
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=groupId")
     Q_CLASSINFO("name", "max_length=255")
     Q_CLASSINFO("appointment", "db_column=appointmentId")
     Q_CLASSINFO("validTo", "null=true")
     Q_CLASSINFO("personList","ignore_field=true")
     Q_CLASSINFO("time", "ignore_field=true")
+    Q_CLASSINFO("clientCount", "ignore_field=true")
 
     Q_INVOKABLE bool personData(int personId, QVariant value);
     Q_INVOKABLE void setPersonData(int personId, QString name, QVariant value);
@@ -114,6 +117,14 @@ public:
     void setPersonDataHash(int personId, QVariantList hash);
     QVariantList personDataHash(int personId);
 
+    int clientCount() const
+    {
+        return m_clientCount;
+    }
+
+signals:
+    void clientCountChanged();
+
 public slots:
 
     void setId(int arg)
@@ -159,7 +170,11 @@ public slots:
 //    void setData(QByteArray arg)
 //    {
 //        m_data = arg;
-//    }
+    //    }
+    void setClientCount(int arg)
+    {
+        m_clientCount = arg;
+    }
 };
 
 #endif // GROUP_H

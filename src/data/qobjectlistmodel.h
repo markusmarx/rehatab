@@ -22,6 +22,8 @@ public:
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 
+    void objIsChanged(QVariant id);
+
     Q_INVOKABLE void append(QObject* obj);
     Q_INVOKABLE void insert(int idx, QObject* obj);
     Q_INVOKABLE void remove(QObject* obj);

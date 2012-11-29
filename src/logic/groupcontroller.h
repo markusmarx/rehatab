@@ -3,10 +3,13 @@
 
 #include <QObject>
 #include <QDateTime>
+#include "QDjangoQuerySet.h"
+#include "data/group2person.h"
 class PersonGroup;
 class QObjectListModel;
 class Person;
 class PersonGroup;
+
 class GroupController : public QObject
 {
     Q_OBJECT
@@ -21,12 +24,16 @@ public:
     Q_INVOKABLE PersonGroup* loadGroup(PersonGroup* group, QDateTime date = QDateTime());
     Q_INVOKABLE PersonGroup* getGroup(int id);
     Q_INVOKABLE PersonGroup* findByAppointmentId(int id);
+
 signals:
     
 public slots:
 
 private:
     QObjectListModel* m_allGroups;
+
+    QDjangoQuerySet<Group2Person> getCurrentGroup2Person(int id, QDateTime date);
+    void updateListData(PersonGroup* group, int clientCount);
     
 };
 

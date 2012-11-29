@@ -2,11 +2,12 @@ import QtQuick 1.1
 import QtDesktop 0.1
 import QmlFeatures 1.0
 import "common/FormUtils.js" as FormUtils
+import "common"
 Rectangle {
     id: client_form
     property int formLabelPos: Qt.AlignTop
-
     property bool formError: false
+
 
     signal close()
 
@@ -91,8 +92,10 @@ Rectangle {
                     id:lbl
                     labelPos: formLabelPos
                     labelMargin: 5
-                    errorRectangle: defaultErrorRec
-                    errorMessage: topErrorMessage
+                    errorRectangle: DefaultErrorRec {}
+                    errorMessage: TopErrorMessage {
+                        relatedItem: input_forename
+                    }
 
                     SimpleFormLabel {
                         text: "Vorname"
@@ -139,8 +142,10 @@ Rectangle {
                     labelPos: formLabelPos
                     labelMargin: 5
 
-                    errorRectangle: defaultErrorRec
-                    errorMessage: topErrorMessage
+                    errorRectangle: DefaultErrorRec {}
+                    errorMessage: TopErrorMessage {
+                                      relatedItem: input_surname
+                                  }
 
                     SimpleFormLabel {
                         text: "Nachname"
@@ -184,8 +189,10 @@ Rectangle {
                     labelPos: formLabelPos
                     labelMargin: 5
 
-                    errorRectangle: defaultErrorRec
-                    errorMessage: topErrorMessage
+                    errorRectangle: DefaultErrorRec {}
+                    errorMessage: TopErrorMessage {
+                                  relatedItem: input_birth
+                              }
 
                     SimpleFormLabel {
                         text: "Geboren am"
@@ -234,8 +241,10 @@ Rectangle {
                     labelPos: formLabelPos
                     labelMargin: 0
 
-                    errorRectangle: sexErrorRec
-                    errorMessage: topErrorMessage
+                    errorRectangle: SexErrorRec {}
+                    errorMessage: TopErrorMessage {
+                                      relatedItem: input_sex
+                                  }
 
                     Label {
                         text: "Geschlecht"

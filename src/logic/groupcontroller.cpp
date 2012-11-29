@@ -2,11 +2,9 @@
 #include "data/persongroup.h"
 #include "data/qobjectlistmodel.h"
 #include "data/persongroup.h"
-#include "data/group2person.h"
 #include "data/person.h"
 #include "data/contract.h"
 
-#include "QDjangoQuerySet.h"
 #include "data/appointment.h"
 #include <QDebug>
 #include <data/persongrouphistory.h>
@@ -14,7 +12,7 @@ GroupController::GroupController(QObject *parent) :
     QObject(parent)
 {
     QStringList names;
-    names << "name" << "date" << "startTime" << "endTime";
+    names << "name" << "clientCount";
     m_allGroups = new QObjectListModel("id", names, QList<QObject*>(), this);
 }
 
@@ -27,6 +25,7 @@ PersonGroup *GroupController::createGroup()
 bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
 {
     Appointment *app;
+    int clientCount = group->clientCount();
     bool isNew = false;
     if (group->id() < 0) {
         group->setValidFrom(group->date());
@@ -71,6 +70,8 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
     QVariantMap map;
     map["validTo"] = QDateTime::currentDateTime();
     qs.update(map);
+
+    clientCount -= pIds.size();
 
     //
     // update presence
@@ -132,12 +133,14 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
 
     }
 
+    updateListData(group, clientCount);
 
     return true;
 }
 
 QObjectListModel *GroupController::allGroups()
 {
+    PersonGroup* group;
     if (m_allGroups->size() == 0) {
         QDjangoQuerySet<PersonGroup> qGroup;
         qGroup = qGroup.all();
@@ -145,7 +148,11 @@ QObjectListModel *GroupController::allGroups()
         QList<QObject*> list;
 
         for (int i = 0; i < qGroup.size(); i++) {
-            list.append(qGroup.at(i));
+            group = qGroup.at(i);
+
+            group->setClientCount(getCurrentGroup2Person(group->id(), QDateTime::currentDateTime()).count());
+
+;           list.append(group);
         }
 
         m_allGroups->setList(list);
@@ -181,6 +188,7 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group, bool 
                     gp->setValidTo(QDateTime());
                     gp->setContract(c);
                     gp->save();
+                    updateListData(group, group->clientCount()+1);
                 } else {
                     QList<QObject*> cl;
                     cl.append(c);
@@ -196,6 +204,22 @@ bool GroupController::addPersonToGroup(Person* person, PersonGroup* group, bool 
 }
 
 
+QDjangoQuerySet<Group2Person> GroupController::getCurrentGroup2Person(int id, QDateTime date)
+{
+    QDjangoQuerySet<Group2Person> qs;
+    return qs.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, id)
+                   && (QDjangoWhere("validFrom", QDjangoWhere::LessOrEquals, date)
+                       && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant())
+                            || QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, date))));
+}
+
+void GroupController::updateListData(PersonGroup *group, int clientCount)
+{
+    qDebug() << Q_FUNC_INFO << group << clientCount;
+    allGroups()->findById(group->id())->setProperty("clientCount", clientCount);
+    allGroups()->objIsChanged(group->id());
+}
+
 PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
 {
     Q_ASSERT(group);
@@ -209,10 +233,8 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
         date = QDateTime::currentDateTime();
     }
 
-    qs = qs.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id())
-                   && (QDjangoWhere("validFrom", QDjangoWhere::LessOrEquals, date)
-                       && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant())
-                       || QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, date))));
+    qs = getCurrentGroup2Person(group->id(), date);
+
     if (qs.count() > 0) {
         qs.selectRelated();
         qDebug() << "found " << qs.size() << " clients";
@@ -246,7 +268,9 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
 PersonGroup *GroupController::getGroup(int id)
 {
     QDjangoQuerySet<PersonGroup> qs;
-    return qs.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
+    PersonGroup* group = qs.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
+    group->setClientCount(getCurrentGroup2Person(group->id(), QDateTime::currentDateTime()).count());
+    return group;
 }
 
 PersonGroup *GroupController::findByAppointmentId(int id)
@@ -254,3 +278,4 @@ PersonGroup *GroupController::findByAppointmentId(int id)
     QDjangoQuerySet<PersonGroup> qs;
     return qs.get(QDjangoWhere("appointment_id", QDjangoWhere::Equals, id));
 }
+

@@ -3,6 +3,7 @@ import QtDesktop 0.1
 import Rehatab 1.0
 import QmlFeatures 1.0
 import "common/FormUtils.js" as FormUtils
+import "common"
 Rectangle {
     id:contractEdit
     property Contract contractObj
@@ -11,7 +12,7 @@ Rectangle {
 
     function fnSaveContract() {
 
-        var inputList = new Array(contract_wValidFrom, contract_wValidTo)
+        var inputList = new Array(contract_wValidFrom, contract_wValidTo, input_value)
         var success = true
 
         for (var i = 0; i < inputList.length; ++i) {
@@ -83,9 +84,10 @@ Rectangle {
                 labelPos: Qt.AlignTop
                 labelMargin: 5
 
-                errorRectangle: defaultErrorRec
-                errorMessage: topErrorMessage
-
+                errorRectangle: DefaultErrorRec {}
+                errorMessage: TopErrorMessage {
+                    relatedItem: contract_wValidFrom
+                }
                 SimpleFormLabel {
                     text: "Vertragsende"
                 }
@@ -130,8 +132,10 @@ Rectangle {
                 labelPos: Qt.AlignTop
                 labelMargin: 5
 
-                errorRectangle: defaultErrorRec
-                errorMessage: topErrorMessage
+                errorRectangle: DefaultErrorRec {}
+                errorMessage: TopErrorMessage {
+                    relatedItem: contract_wValidTo
+                }
 
                 SimpleFormLabel {
                     text: "Vertragsende"
@@ -173,6 +177,57 @@ Rectangle {
 
                 }
             }
+
+            LabelLayout {
+                id:lbl
+                labelPos: Qt.AlignTop
+                labelMargin: 5
+                errorRectangle: DefaultErrorRec {}
+                errorMessage: TopErrorMessage {
+                    relatedItem: input_value
+                }
+
+                SimpleFormLabel {
+                    text: "Value"
+                }
+
+                TextField {
+                    id: input_value
+                    textColor: main_style.defaultInputFont.color
+                    width: 250
+
+                    font {
+                        family: main_style.defaultInputFont.family
+                        pixelSize: main_style.defaultInputFont.size
+                    }
+
+                    function validate() {
+                        var validationRules = new Array(1)
+                        validationRules[0]
+                                = FormUtils.fnCreateValidationRule(
+                                    input_value.text.length > 0,
+                                        qsTr("Der Wert eingeben werden!"))
+
+
+                        return FormUtils.fnProcessValidation(validationRules, parent)
+                    }
+
+
+
+                    onTextChanged: {
+                        if (parent.error) {
+                            validate()
+                        }
+                    }
+                    onActiveFocusChanged: {
+                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
+                    }
+
+
+                }
+
+            }
+
         }
 
     }

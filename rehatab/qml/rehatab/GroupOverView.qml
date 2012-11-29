@@ -42,7 +42,14 @@ Item {
                     width: 200
                     height: 200
                     color: "grey"
-                    Text {text:name}
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        text:name}
+                    Text {
+                        anchors.bottom: parent.bottom
+                        text: clientCount + " Mitglieder"
+                    }
 
                     MouseArea {
                         anchors.fill: parent
@@ -55,7 +62,7 @@ Item {
                         id: aDropArea
                         anchors.fill: parent
                         onDragEnter: {
-                            parent.color = "yellow"
+                            parent.color = "white"
 
                         }
                         onDragLeave: {
@@ -67,6 +74,7 @@ Item {
                             var contractList = clientController.getContracts(event.data.text)
                             //comp_contractList.createObject(group_overview, {list: contractList})
                             fnLinkPersonToGroup(event.data.text, id)
+                            parent.color = "grey"
                         }
                     }
                 }

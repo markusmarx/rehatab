@@ -14,7 +14,7 @@ Item {
     }
 
     function fnNewContract() {
-        comp_contractedit.createObject(parent, {personObj: _person})
+        comp_contractedit.createObject(pag_contentarea, {personObj: _person})
     }
 
     Rectangle {

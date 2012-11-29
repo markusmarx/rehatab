@@ -59,7 +59,20 @@ QVariant QObjectListModel::data(const QModelIndex &index, int role) const
 //    } else {
 
 //    }
-     return m_list.at(index.row())->property(nameArr);
+    return m_list.at(index.row())->property(nameArr);
+}
+
+void QObjectListModel::objIsChanged(QVariant idProp)
+{
+    QByteArray id = m_id.toAscii();
+    QObject* lObj;
+    for (int i = 0; i < m_list.size(); i++) {
+        lObj = m_list.at(i);
+        if (lObj->property(id) == idProp) {
+            emit dataChanged(createIndex(i,0), createIndex(i,0));
+            break;
+        }
+    }
 }
 
 void QObjectListModel::append(QObject *obj)
@@ -126,6 +139,7 @@ void QObjectListModel::update(QObject *obj)
             if (lObj != obj) {
                 m_list.removeAt(i);
                 m_list.insert(i, obj);
+                lObj->deleteLater();
             }
             emit dataChanged(createIndex(i,0), createIndex(i,0));
             break;
