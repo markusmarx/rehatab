@@ -15,8 +15,13 @@ ClientController::ClientController(QObject *parent) :
     m_personList = new QObjectListModel("id", names, QList<QObject*>(), this);
 
     QDjangoQuerySet<Person> pL;
+    QDateTime date = QDateTime::currentDateTime();
+    pL = pL.filter((QDjangoWhere("validFrom", QDjangoWhere::LessOrEquals, date)
+                  && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant())
+                       || QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, date))));
+
     QList<QObject*> personList;
-    for (int i = 0; i < pL.count(); i++) {
+    for (int i = 0; i < pL.size(); i++) {
         personList.append(pL.at(i));
     }
     m_personList->setList(personList);
@@ -49,6 +54,7 @@ bool ClientController::savePerson(Person *person)
     bool res = person->save();
     Contract* contract;
     ClientAppointmentSummary* clAppSum;
+    m_personList->update(person);
     foreach(QObject* cObj, person->contracts()->list()) {
 
         contract = qobject_cast<Contract*>(cObj);
@@ -82,6 +88,7 @@ Person *ClientController::getPerson(int personId)
 bool ClientController::removePerson(Person *person)
 {
     person->setValidTo(QDateTime::currentDateTime());
+    m_personList->remove(person);
     return person->save();
 }
 

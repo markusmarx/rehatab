@@ -1,24 +1,32 @@
 import QtQuick 1.1
 import QtDesktop 0.1
 import QmlFeatures 1.0
+import Rehatab 1.0
 import "common/FormUtils.js" as FormUtils
 import "common"
 Rectangle {
     id: client_form
     property int formLabelPos: Qt.AlignTop
     property bool formError: false
-
+    property Person personObj
 
     signal close()
 
     onClose: {
-
         client_form.destroy()
     }
 
     onActiveFocusChanged: {
         if (activeFocus || focus)
             input_forename.forceActiveFocus()
+    }
+
+    Component.onCompleted: {
+
+        if (Qt.isQtObject(personObj)) {
+            fnLoadPerson()
+        }
+
     }
 
     function fnSaveClient() {
@@ -34,18 +42,26 @@ Rectangle {
         }
 
         if (success) {
-            var personObj = clientController.createPerson();
-                personObj.name = input_surname.text
-                personObj.forename = input_forename.text
-                personObj.birth = input_birth.date;
-                personObj.sex = input_sex.sex
-                clientController.savePerson(personObj)
-                close()
+            if (!Qt.isQtObject(personObj))
+                personObj = clientController.createPerson();
+            personObj.name = input_surname.text
+            personObj.forename = input_forename.text
+            personObj.birth = input_birth.date;
+            personObj.sex = input_sex.sex
+            clientController.savePerson(personObj)
+            close()
         } else {
             formError = true
         }
 
 
+    }
+
+    function fnLoadPerson() {
+        input_forename.text = personObj.forename
+        input_surname.text = personObj.name
+        input_birth.date = personObj.birth
+        input_sex.sex = personObj.sex
     }
 
     color: "white"
@@ -162,6 +178,7 @@ Rectangle {
                                 validate()
                             }
                         }
+
                         function validate() {
                             var validationRules = new Array(1)
                             validationRules[0]
@@ -217,8 +234,13 @@ Rectangle {
                                             qsTr("Ein Datum eingeben!"))
                             validationRules[1]
                                     = FormUtils.fnCreateValidationRule(
-                                        true,
+                                        input_birth.validDate,
                                         qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
+
+                            validationRules[2]
+                                    = FormUtils.fnCreateValidationRule(
+                                        input_birth.date < new Date(Date.now()),
+                                        qsTr("Ein Geburtstagsdatum muss in der Vergangenheit liegen!"))
 
                             return FormUtils.fnProcessValidation(validationRules, parent)
                         }
