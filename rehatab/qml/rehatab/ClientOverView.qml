@@ -17,6 +17,16 @@ Item {
         comp_contractedit.createObject(pag_contentarea, {personObj: _person})
     }
 
+    function fnEditClient() {
+        comp_clientform.createObject(pag_contentarea, {personObj: _person});
+    }
+
+    function fnDeleteClient() {
+        lst_view.fnClearSelection()
+        clientController.removePerson(_person)
+        fnOpenCloseClientOverView(false)
+    }
+
     Rectangle {
         anchors.fill: parent
         color: "white"
@@ -29,10 +39,15 @@ Item {
         anchors.right: parent.right
         Button {
             text: "Stammdaten editieren"
+            onClicked: fnEditClient()
         }
         Button {
             text: "Vertrag anlegen"
             onClicked: fnNewContract()
+        }
+        Button {
+            text: "Klient löschen"
+            onClicked: fnDeleteClient()
         }
     }
 

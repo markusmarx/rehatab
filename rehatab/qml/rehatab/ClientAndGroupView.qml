@@ -33,6 +33,9 @@ Item {
             }
 
 
+        } else {
+            _currentView.destroy()
+
         }
 
     }
