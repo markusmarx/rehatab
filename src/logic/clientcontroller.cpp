@@ -146,9 +146,6 @@ QList<QObject *> ClientController::getContracts(int personId)
     //
     // calculate openvalues for contract
     //
-
-
-
     for (int i = contractQs.size()-1; i >=0 ; i--) {
         contract = contractQs.at(i);
         loadContract(contract);
