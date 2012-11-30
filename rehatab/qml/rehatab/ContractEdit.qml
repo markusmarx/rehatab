@@ -12,7 +12,7 @@ Rectangle {
 
     function fnSaveContract() {
 
-        var inputList = new Array(contract_wValidFrom, contract_wValidTo, input_value)
+        var inputList = new Array(contract_wValidFrom, contract_wValidTo)
         var success = true
 
         for (var i = 0; i < inputList.length; ++i) {
@@ -110,7 +110,7 @@ Rectangle {
                                     qsTr("Ein Datum eingeben!"))
                         validationRules[1]
                                 = FormUtils.fnCreateValidationRule(
-                                    contract_wValidTo.validDate,
+                                    contract_wValidFrom.validDate,
                                     qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
 
                         return FormUtils.fnProcessValidation(validationRules, parent)
@@ -162,6 +162,11 @@ Rectangle {
                                     contract_wValidTo.validDate,
                                     qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
 
+                        validationRules[2]
+                                = FormUtils.fnCreateValidationRule(
+                                    contract_wValidTo.date > contract_wValidFrom.date ,
+                                    qsTr("Das Ablaufdatum muss nach dem Startdatum kommen!"))
+
                         return FormUtils.fnProcessValidation(validationRules, parent)
                     }
 
@@ -178,55 +183,55 @@ Rectangle {
                 }
             }
 
-            LabelLayout {
-                id:lbl
-                labelPos: Qt.AlignTop
-                labelMargin: 5
-                errorRectangle: DefaultErrorRec {}
-                errorMessage: TopErrorMessage {
-                    relatedItem: input_value
-                }
+//            LabelLayout {
+//                id:lbl
+//                labelPos: Qt.AlignTop
+//                labelMargin: 5
+//                errorRectangle: DefaultErrorRec {}
+//                errorMessage: TopErrorMessage {
+//                    relatedItem: input_value
+//                }
 
-                SimpleFormLabel {
-                    text: "Value"
-                }
+//                SimpleFormLabel {
+//                    text: "Value"
+//                }
 
-                TextField {
-                    id: input_value
-                    textColor: main_style.defaultInputFont.color
-                    width: 250
+//                TextField {
+//                    id: input_value
+//                    textColor: main_style.defaultInputFont.color
+//                    width: 250
 
-                    font {
-                        family: main_style.defaultInputFont.family
-                        pixelSize: main_style.defaultInputFont.size
-                    }
+//                    font {
+//                        family: main_style.defaultInputFont.family
+//                        pixelSize: main_style.defaultInputFont.size
+//                    }
 
-                    function validate() {
-                        var validationRules = new Array(1)
-                        validationRules[0]
-                                = FormUtils.fnCreateValidationRule(
-                                    input_value.text.length > 0,
-                                        qsTr("Der Wert eingeben werden!"))
-
-
-                        return FormUtils.fnProcessValidation(validationRules, parent)
-                    }
+//                    function validate() {
+//                        var validationRules = new Array(1)
+//                        validationRules[0]
+//                                = FormUtils.fnCreateValidationRule(
+//                                    input_value.text.length > 0,
+//                                        qsTr("Der Wert eingeben werden!"))
 
 
-
-                    onTextChanged: {
-                        if (parent.error) {
-                            validate()
-                        }
-                    }
-                    onActiveFocusChanged: {
-                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
-                    }
+//                        return FormUtils.fnProcessValidation(validationRules, parent)
+//                    }
 
 
-                }
 
-            }
+//                    onTextChanged: {
+//                        if (parent.error) {
+//                            validate()
+//                        }
+//                    }
+//                    onActiveFocusChanged: {
+//                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
+//                    }
+
+
+//                }
+
+//            }
 
         }
 

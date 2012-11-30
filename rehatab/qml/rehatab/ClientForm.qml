@@ -178,6 +178,7 @@ Rectangle {
                                 validate()
                             }
                         }
+
                         function validate() {
                             var validationRules = new Array(1)
                             validationRules[0]

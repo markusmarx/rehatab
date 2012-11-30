@@ -2,7 +2,8 @@ import QtQuick 1.1
 import QmlFeatures 1.0
 import QtDesktop 0.1
 import Rehatab 1.0
-
+import "common/FormUtils.js" as FormUtils
+import "common"
 Rectangle {
     id: form_group
 
@@ -10,9 +11,22 @@ Rectangle {
     property PersonGroup _group
     property int mode:0
     property date currentDate;
+    property bool formError: false
     signal close()
 
     function fnSaveGroup() {
+
+        var inputList = new Array(input_name, input_startDate, input_starttime, input_minutes)
+        var success = true
+
+        for (var i = 0; i < inputList.length; ++i) {
+            if (!inputList[i].validate()) {
+                success = false
+            }
+        }
+
+        if (!success) return
+
         if (!Qt.isQtObject(_group)) {
             _group = groupController.createGroup();
         }
@@ -81,21 +95,58 @@ Rectangle {
                     }
                 }
             }
+            Text {
+                text: "Überprüfen Sie die rot markierten Eingaben! Detailierte Informationen finden Sie an den Eingaben."
+                color: "red"
+                opacity: formError? 1: 0
+            }
 
             LabelLayout {
                 labelPos: Qt.AlignTop
-                Label {
+                errorRectangle: DefaultErrorRec {}
+                errorMessage: TopErrorMessage {
+                    relatedItem: input_name
+                }
+                SimpleFormLabel {
                     text: "Name"
                 }
                 TextField {
                     id: input_name
-                     enabled: mode==0
+                    enabled: mode==0
+
+                    onTextChanged: {
+                        if (parent.error) {
+                            validate()
+                        }
+                    }
+
+                    function validate() {
+                        var validationRules = new Array(1)
+                        validationRules[0]
+                                = FormUtils.fnCreateValidationRule(
+                                    input_name.text.length > 0,
+                                        qsTr("Der Gruppenname muss eingeben werden!"))
+
+
+                        return FormUtils.fnProcessValidation(validationRules, parent)
+
+                    }
+
+                    onActiveFocusChanged: {
+                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
+                    }
+
+
                 }
             }
 
             LabelLayout {
                 labelPos: Qt.AlignTop
-                Label {
+                errorRectangle: DefaultErrorRec {}
+                errorMessage: TopErrorMessage {
+                    relatedItem: input_startDate
+                }
+                SimpleFormLabel {
                     text: "Started am"
                 }
 
@@ -103,6 +154,33 @@ Rectangle {
                 DateEdit {
                     id:input_startDate
                     enabled: mode==0
+                    inputMask: "99.99.9999"
+                    fieldWidth: 150
+
+                    function validate() {
+
+                        var validationRules = new Array(1)
+                        validationRules[0]
+                                = FormUtils.fnCreateValidationRule(
+                                    parseInt(input_startDate.text.charAt(0)) >= 0,
+                                        qsTr("Ein Datum eingeben!"))
+                        validationRules[1]
+                                = FormUtils.fnCreateValidationRule(
+                                    input_startDate.validDate,
+                                    qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
+
+                        return FormUtils.fnProcessValidation(validationRules, parent)
+                    }
+
+                    onActiveFocusChanged: {
+                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
+                    }
+
+                    onTextChanged: {
+                        if (parent && parent.error) {
+                            validate()
+                        }
+                    }
                 }
 
             }
@@ -110,18 +188,48 @@ Rectangle {
             Row {
                 LabelLayout {
                     labelPos: Qt.AlignTop
-                    Label {
+                    errorRectangle: DefaultErrorRec {}
+                    errorMessage: TopErrorMessage {
+                        relatedItem: input_starttime
+                    }
+                    SimpleFormLabel {
                         text: "um (hh:mm)"
                     }
 
                     TimeEdit {
                         id:input_starttime
                         enabled: mode==0
+                        onTextChanged: {
+                            if (parent.error) {
+                                validate()
+                            }
+                        }
+
+                        function validate() {
+                            var validationRules = new Array(1)
+                            validationRules[0]
+                                    = FormUtils.fnCreateValidationRule(
+                                        input_starttime.validTime,
+                                            qsTr("Eine Zeit eingeben Bsp: 08:00!"))
+
+
+                            return FormUtils.fnProcessValidation(validationRules, parent)
+
+                        }
+
+                        onActiveFocusChanged: {
+                            FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
+                        }
+
                     }
                 }
                 LabelLayout {
                     labelPos: Qt.AlignTop
-                    Label {
+                    errorRectangle: DefaultErrorRec {}
+                    errorMessage: TopErrorMessage {
+                        relatedItem: input_minutes
+                    }
+                    SimpleFormLabel {
                         text: "Dauer in Minuten"
                     }
 
@@ -129,6 +237,28 @@ Rectangle {
                     id:input_minutes
                     validator: IntValidator {}
                     enabled: mode==0
+                    onTextChanged: {
+                        if (parent.error) {
+                            validate()
+                        }
+                    }
+
+                    function validate() {
+                        var validationRules = new Array(1)
+                        validationRules[0]
+                                = FormUtils.fnCreateValidationRule(
+                                    input_minutes.acceptableInput,
+                                        qsTr("Die Minuten angeben Bsp: 45"))
+
+
+                        return FormUtils.fnProcessValidation(validationRules, parent)
+
+                    }
+
+                    onActiveFocusChanged: {
+                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
+                    }
+
                 }
                 }
             }
@@ -136,11 +266,11 @@ Rectangle {
             LabelLayout {
                 labelPos: Qt.AlignTop
                 itemMargin: 10
+
                 Label { text: "Wiederholung jede\nWoche am"}
 
                 Row {
                     id: input_weekdays
-
 
                     spacing: 5
                     Repeater {
