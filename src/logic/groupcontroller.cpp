@@ -143,16 +143,17 @@ QObjectListModel *GroupController::allGroups()
     PersonGroup* group;
     if (m_allGroups->size() == 0) {
         QDjangoQuerySet<PersonGroup> qGroup;
-        qGroup = qGroup.all();
+        QDateTime date = QDateTime::currentDateTime();
+        qGroup = qGroup.filter((QDjangoWhere("validFrom", QDjangoWhere::LessOrEquals, date)
+                                        && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant())
+                                             || QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, date))));
         qGroup.selectRelated();
         QList<QObject*> list;
 
         for (int i = 0; i < qGroup.size(); i++) {
             group = qGroup.at(i);
-
             group->setClientCount(getCurrentGroup2Person(group->id(), QDateTime::currentDateTime()).count());
-
-;           list.append(group);
+            list.append(group);
         }
 
         m_allGroups->setList(list);
@@ -277,5 +278,16 @@ PersonGroup *GroupController::findByAppointmentId(int id)
 {
     QDjangoQuerySet<PersonGroup> qs;
     return qs.get(QDjangoWhere("appointment_id", QDjangoWhere::Equals, id));
+}
+
+bool GroupController::removeGroup(PersonGroup *group)
+{
+    group->setValidTo(QDateTime::currentDateTime());
+    group->save();
+
+    group->appointment()->setValidTo(group->validTo());
+    group->appointment()->save();
+    m_allGroups->remove(group);
+    return true;
 }
 

@@ -121,7 +121,7 @@ QList<Appointment *> AppointmentController::getAppointments(QDate from, QDate to
 
     appSQs = appSQs.filter(
                 (QDjangoWhere("validFrom", QDjangoWhere::GreaterOrEquals, from) && QDjangoWhere("validFrom", QDjangoWhere::LessOrEquals, to)) ||
-                (QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, to) && QDjangoWhere("validTo", QDjangoWhere::LessOrEquals, to)) ||
+                (QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, from) && QDjangoWhere("validTo", QDjangoWhere::LessOrEquals, to)) ||
                 (QDjangoWhere("validFrom", QDjangoWhere::LessThan, from) &&
                     (QDjangoWhere("validTo", QDjangoWhere::GreaterThan, to) || !QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant())))
                 );

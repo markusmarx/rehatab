@@ -24,6 +24,7 @@ public:
     Q_INVOKABLE PersonGroup* loadGroup(PersonGroup* group, QDateTime date = QDateTime());
     Q_INVOKABLE PersonGroup* getGroup(int id);
     Q_INVOKABLE PersonGroup* findByAppointmentId(int id);
+    Q_INVOKABLE bool removeGroup(PersonGroup* group);
 
 signals:
     

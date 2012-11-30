@@ -7,10 +7,12 @@ ToolTip {
     anchor: Qt.AlignTop
     property alias message: text.text
     property Item relatedItem
+    property int deltaX: 0
+    property int deltaY: 0
     Component.onCompleted: {
         var pos = relatedItem.mapToItem(null, relatedItem.x, relatedItem.y)
-        x = pos.x
-        y = pos.y-relatedItem.height/2 - height
+        x = pos.x+relatedItem.width-width/2 - 10 + deltaX
+        y = pos.y-relatedItem.height/2 - height -5 + deltaY
     }
     Text {
         id:text
