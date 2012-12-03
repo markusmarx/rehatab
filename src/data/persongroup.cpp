@@ -9,7 +9,7 @@ PersonGroup::PersonGroup(QObject *parent, int id) :
     QStringList pnames;
     pnames << "name" << "forename" << "age" << "birth";
     m_personList = new QObjectListModel("id", pnames, QList<QObject*>(), this);
-    setForeignKey("appointment", new Appointment(this));
+
 }
 
 bool PersonGroup::personData(int personId, QVariant variant)

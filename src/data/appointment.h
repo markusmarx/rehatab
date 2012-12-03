@@ -8,6 +8,8 @@
 #include "person.h"
 
 class QObjectListModel;
+class PersonGroup;
+class PersonAppointment;
 class Appointment : public QDjangoModel
 {
     Q_OBJECT
@@ -21,12 +23,16 @@ class Appointment : public QDjangoModel
     Q_PROPERTY(QString iteration READ iteration WRITE setIteration)
     Q_PROPERTY(QDateTime validFrom READ validFrom WRITE setValidFrom)
     Q_PROPERTY(QDateTime validTo READ validTo WRITE setValidTo)
+    Q_PROPERTY(PersonGroup* personGroup READ personGroup WRITE setPersonGroup)
+    Q_PROPERTY(PersonAppointment* personAppointment READ personAppointment WRITE setPersonAppointment)
 
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=appointmentId")
     Q_CLASSINFO("name", "max_length=255")
     Q_CLASSINFO("description", "max_length=1000 null=true")
     Q_CLASSINFO("time", "ignore_field=true")
     Q_CLASSINFO("validTo", "null=true")
+    Q_CLASSINFO("personGroup", "db_column=groupId null=true")
+    Q_CLASSINFO("personAppointment", "db_column=personAppointmentId null=true")
 
 public:
     explicit Appointment(QObject *parent = 0);
@@ -58,6 +64,12 @@ public:
     void setValidTo(QDateTime validTo);
     QDateTime validTo() const;
 
+    void setPersonGroup(PersonGroup* personGroup);
+    PersonGroup* personGroup() const;
+
+    void setPersonAppointment(PersonAppointment* personApp);
+    PersonAppointment* personAppointment() const;
+
 signals:
 
 public slots:
@@ -71,6 +83,7 @@ private:
     int m_id;
     QString m_iteration;
     QDateTime m_validTo;
+
 };
 
 #endif // APPOINTMENT_H

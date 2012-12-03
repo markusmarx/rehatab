@@ -1,4 +1,6 @@
+#QDJANGO_LIBRARY_TYPE=staticlib
 include(../../../qt.extern/qdjango/qdjango.pri)
+
 INCLUDEPATH += $$QDJANGO_INCLUDEPATH
 DEPENDPATH += $$QDJANGO_INCLUDEPATH
 
@@ -58,10 +60,6 @@ HEADERS += \
     calendarmodel.h
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../qt.libs/ -lqdjango-db
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../qt.libs/ -lqdjango-db
-else:unix:!macx:!symbian: LIBS += -L$$PWD/../../../qt.libs/ -lqdjango-db
-
 #
 # rehatab
 #
@@ -81,4 +79,8 @@ RESOURCES += \
     resources.qrc
 
 OTHER_FILES +=
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../qt.libs/ $$QDJANGO_DB_LIBS
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../qt.libs/ $$QDJANGO_DB_LIBS
+else:unix:!macx:!symbian: LIBS += -L$$PWD/../../../qt.libs/ $$QDJANGO_DB_LIBS
 

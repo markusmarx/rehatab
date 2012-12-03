@@ -30,6 +30,7 @@ HEADERS += \
     tst_base.h \
     tst_appointment.h
 
+#QDJANGO_LIBRARY_TYPE=staticlib
 include(../../../../qt.extern/qdjango/qdjango.pri)
 INCLUDEPATH += $$QDJANGO_INCLUDEPATH
 
@@ -46,7 +47,6 @@ else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../src/d
 else:unix:!macx:!symbian: PRE_TARGETDEPS += $$OUT_PWD/../../src/librehatab.a
 
 
-
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../qt.libs/ -lqdjango-db
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../qt.libs/ -lqdjango-db
-else:unix:!macx: LIBS += -L$$PWD/../../../../qt.libs/ -lqdjango-db
+else:unix:!macx:!symbian: LIBS += -L$$PWD/../../../../qt.libs/ -lqdjango-db

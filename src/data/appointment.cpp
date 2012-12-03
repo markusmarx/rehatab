@@ -1,12 +1,13 @@
 #include "appointment.h"
 #include <QDebug>
 #include "qobjectlistmodel.h"
+#include "persongroup.h"
+#include "personappointment.h"
 
 Appointment::Appointment(QObject *parent) :
     QDjangoModel(parent), m_id(-1)
-
 {
-
+    setForeignKey("personGroup", new PersonGroup(this));
 }
 
 void Appointment::setValidFrom(QDateTime fromDate)
@@ -57,6 +58,26 @@ void Appointment::setValidTo(QDateTime itEnd)
 QDateTime Appointment::validTo() const
 {
     return m_validTo;
+}
+
+void Appointment::setPersonGroup(PersonGroup *personGroup)
+{
+    setForeignKey("personGroup", personGroup);
+}
+
+PersonGroup *Appointment::personGroup() const
+{
+    return qobject_cast<PersonGroup*>(foreignKey("personGroup"));
+}
+
+void Appointment::setPersonAppointment(PersonAppointment *personApp)
+{
+    setForeignKey("personAppointment", personApp);
+}
+
+PersonAppointment *Appointment::personAppointment() const
+{
+    return qobject_cast<PersonAppointment*>(foreignKey("personAppointment"));
 }
 
 void Appointment::setName(QString name)

@@ -29,6 +29,8 @@ class PersonGroup : public QDjangoModel
 
     QHash<int, QVariantList> m_personData;
 
+    Appointment* m_appointment;
+
 
     //QByteArray m_data;
 
@@ -53,7 +55,7 @@ public:
     Q_PROPERTY(int clientCount READ clientCount WRITE setClientCount NOTIFY clientCountChanged)
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=groupId")
     Q_CLASSINFO("name", "max_length=255")
-    Q_CLASSINFO("appointment", "db_column=appointmentId")
+    Q_CLASSINFO("appointment", "ignore_field=true")
     Q_CLASSINFO("validTo", "null=true")
     Q_CLASSINFO("personList","ignore_field=true")
     Q_CLASSINFO("time", "ignore_field=true")
@@ -94,7 +96,7 @@ public:
 
     Appointment* appointment() const
     {
-        return qobject_cast<Appointment*>(foreignKey("appointment"));
+        return m_appointment;
     }
 
     QDateTime time() const
@@ -160,7 +162,7 @@ public slots:
     void setPersonList(QList<QObject*> arg);
     void setAppointment(Appointment* arg)
     {
-        setForeignKey("appointment", arg);
+        m_appointment = arg;
     }
 
     void setTime(QDateTime arg)

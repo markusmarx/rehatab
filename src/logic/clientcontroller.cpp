@@ -4,8 +4,9 @@
 #include "data/appointment.h"
 #include "data/qobjectlistmodel.h"
 #include "QDjangoQuerySet.h"
-#include <data/group2person.h>
-#include <data/persongrouphistory.h>
+#include "data/group2person.h"
+#include "data/persongrouphistory.h"
+#include "data/personappointment.h"
 
 ClientController::ClientController(QObject *parent) :
     QObject(parent)
@@ -130,6 +131,27 @@ Contract* ClientController::loadContract(Contract* contract)
     }
     contract->setOpenValue(openValue);
     return contract;
+}
+
+PersonAppointment *ClientController::createPersonAppointment()
+{
+    PersonAppointment* pApp = new PersonAppointment(this);
+    pApp->setAppointment(pApp);
+    return pApp;
+}
+
+bool ClientController::savePersonAppointment(PersonAppointment *personApp, Person *p, Contract *c)
+{
+    bool isNew = personApp->id() < 0;
+    Appointment* app = personApp->appointment();
+    if (isNew) {
+        personApp->setClient(p);
+        personApp->setContract(c);
+        personApp->save();
+        app->setPersonAppointment(personApp);
+        app->save();
+    }
+
 }
 
 QList<QObject *> ClientController::getContracts(int personId)

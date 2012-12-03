@@ -21,6 +21,10 @@ Item {
         comp_clientform.createObject(pag_contentarea, {personObj: _person});
     }
 
+    function fnNewClientAppointment() {
+        comp_clientappointmentedit.createObject(pag_contentarea, {personObj: _person});
+    }
+
     function fnDeleteClient() {
         lst_view.fnClearSelection()
         clientController.removePerson(_person)
@@ -48,6 +52,10 @@ Item {
         Button {
             text: "Klient löschen"
             onClicked: fnDeleteClient()
+        }
+        Button {
+            text: "Neuen Termin vereinbaren"
+            onClicked: fnNewClientAppointment()
         }
     }
 
@@ -143,13 +151,4 @@ Item {
             }
         }
     }
-
-    Component {
-        id: comp_contractedit
-        ContractEdit {
-            anchors.fill: parent
-        }
-    }
-
-
 }

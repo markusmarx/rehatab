@@ -6,6 +6,7 @@
 #include <QDeclarativeEngine>
 #include "logic/appointmentmodel.h"
 #include "data/appointment.h"
+#include "data/persongroup.h"
 
 QHash<QObject*, CalendarTimeLineAttached*> CalendarTimeLineAttached::attached;
 
@@ -238,6 +239,7 @@ void CalendarTimeLine::addAppointment(QTime from, QTime to, QString name, int id
     QDeclarativeProperty::write(item, "to", to);
     QDeclarativeProperty::write(item, "from", from);
     QDeclarativeProperty::write(item, "id", id);
+
 }
 
 void CalendarTimeLine::appointmentChanged(QDate adate)
@@ -247,14 +249,14 @@ void CalendarTimeLine::appointmentChanged(QDate adate)
 void CalendarTimeLine::updateAppointments(QList<Appointment *> appointmentList)
 {
     foreach(Appointment* app, appointmentList) {
-        addAppointment(app->time(), app->time().addSecs(60*app->minutes()), app->name(), app->id());
+        addAppointment(app->time(), app->time().addSecs(60*app->minutes()), app->personGroup()->name(), app->id());
     }
 }
 void CalendarTimeLine::appointmentUpdated(Appointment *appointment) {
     Q_D(CalendarTimeLine);
     //qDebug() << appointment->fromDate() << ", " << d->m_date;
     if (appointment->date().date() == d->m_date) {
-        addAppointment(appointment->time(), appointment->time().addSecs(60*appointment->minutes()), appointment->name(), appointment->id());
+        addAppointment(appointment->time(), appointment->time().addSecs(60*appointment->minutes()), appointment->personGroup()->name(), appointment->id());
     }
 }
 

@@ -110,6 +110,20 @@ Item {
         }
     }
 
+    Component {
+        id: comp_contractedit
+        ContractEdit {
+            anchors.fill: parent
+        }
+    }
+
+    Component {
+        id: comp_clientappointmentedit
+        ClientAppointmentEdit {
+            anchors.fill: parent
+        }
+    }
+
 
     Item {
         id: pag_navigation

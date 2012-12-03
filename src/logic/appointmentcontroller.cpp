@@ -5,6 +5,7 @@
 #include "data/qobjectlistmodel.h"
 #include "util/timeiteration.h"
 #include "util/QsLog.h"
+#include "data/persongroup.h"
 
 AppointmentController::AppointmentController(QObject *parent) :
     QObject(parent), m_appointmentModel(new AppointmentModel(this))
@@ -117,6 +118,7 @@ bool AppointmentController::removeAppointment(Appointment *appointment)
 
 QList<Appointment *> AppointmentController::getAppointments(QDate from, QDate to, bool expand)
 {
+    qDebug() << Q_FUNC_INFO << from << to << expand;
     QDjangoQuerySet<Appointment> appSQs;
 
     appSQs = appSQs.filter(
@@ -156,6 +158,7 @@ QList<Appointment *> AppointmentController::getAppointments(QDate from, QDate to
             newApp->setValidTo(app->validTo());
             newApp->setIteration(app->iteration());
             newApp->setMinutes(app->minutes());
+            newApp->setPersonGroup(app->personGroup());
             appList.append(newApp);
         }
     }
@@ -165,7 +168,7 @@ QList<Appointment *> AppointmentController::getAppointments(QDate from, QDate to
 
 void AppointmentController::loadAppointmentsToModel(QDate from, QDate to)
 {
-
+    qDebug() << Q_FUNC_INFO << from << to;
     m_appointmentModel->setAppointments(getAppointments(from, to, true));
 
 }

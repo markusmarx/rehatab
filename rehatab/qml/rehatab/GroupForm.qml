@@ -7,7 +7,6 @@ import "common"
 Rectangle {
     id: form_group
 
-    property int weekFlags
     property PersonGroup _group
     property int mode:0
     property date currentDate;
@@ -17,10 +16,7 @@ Rectangle {
     function fnSaveGroup() {
 
         var inputList = new Array(input_name,
-                                  input_startDate,
-                                  input_starttime,
-                                  input_minutes,
-                                  input_weekdays)
+                                  input_timeselection)
         var success = true
 
         for (var i = 0; i < inputList.length; ++i) {
@@ -38,12 +34,12 @@ Rectangle {
             _group = groupController.createGroup();
         }
         _group.name = input_name.text
-        _group.date = input_startDate.date
-        _group.time = input_starttime.time
-        _group.minutes = parseInt(input_minutes.text)
+        _group.date = input_timeselection.startDate
+        _group.time = input_timeselection.startTime
+        _group.minutes = parseInt(input_timeselection.minutes)
         var iteration = "w 1 "
         for (var i = 1, k = 1; k <= 7; i=i*2,k++) {
-            if (weekFlags & i) {
+            if (input_timeselection.weekFlags & i) {
                 iteration += k.toString()
             }
         }
@@ -69,13 +65,14 @@ Rectangle {
 
     function fnLoadGroup() {
         input_name.text = _group.name
-        input_startDate.date = _group.date
-        input_minutes.text = _group.minutes
-        input_starttime.time = _group.time
-
+        input_timeselection.startDate = _group.date
+        input_timeselection.minutes = _group.minutes
+        input_timeselection.startTime = _group.time
+        var wf
         for (var i=4; i < _group.iteration.length; i++) {
-            weekFlags = weekFlags | Math.pow(2, parseInt(_group.iteration.charAt(i))-1)
+            wf = wf | Math.pow(2, parseInt(_group.iteration.charAt(i))-1)
         }
+        input_timeselection.weekFlags = wf
 
     }
 
@@ -163,207 +160,8 @@ Rectangle {
                     }
                 }
 
-                LabelLayout {
-                    labelPos: Qt.AlignTop
-                    errorRectangle: DefaultErrorRec {}
-                    errorMessage: TopErrorMessage {
-                        relatedItem: input_startDate
-                    }
-                    SimpleFormLabel {
-                        text: "Started am"
-                    }
-
-
-                    DateEdit {
-                        id:input_startDate
-                        enabled: mode==0
-                        inputMask: "99.99.9999"
-                        fieldWidth: 150
-                        font: input_name.font
-                        function validate() {
-
-                            var validationRules = new Array(1)
-                            validationRules[0]
-                                    = FormUtils.fnCreateValidationRule(
-                                        parseInt(input_startDate.text.charAt(0)) >= 0,
-                                        qsTr("Ein Datum eingeben!"))
-                            validationRules[1]
-                                    = FormUtils.fnCreateValidationRule(
-                                        input_startDate.validDate,
-                                        qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
-
-                            return FormUtils.fnProcessValidation(validationRules, parent)
-                        }
-
-                        onActiveFocusChanged: {
-                            FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
-                        }
-
-                        onTextChanged: {
-                            if (parent && parent.error) {
-                                validate()
-                            }
-                        }
-                    }
-
-                }
-
-                Row {
-                    LabelLayout {
-                        labelPos: Qt.AlignTop
-
-                        errorRectangle: DefaultErrorRec {}
-                        errorMessage: TopErrorMessage {
-                            relatedItem: input_starttime
-                        }
-                        SimpleFormLabel {
-                            text: "um (hh:mm)"
-                        }
-
-                        TimeEdit {
-                            id:input_starttime
-                            enabled: mode==0
-                            font: input_name.font
-
-                            onTextChanged: {
-                                if (parent.error) {
-                                    validate()
-                                }
-                            }
-
-                            function validate() {
-                                var validationRules = new Array(1)
-                                validationRules[0]
-                                        = FormUtils.fnCreateValidationRule(
-                                            input_starttime.validTime,
-                                            qsTr("Eine Zeit eingeben Bsp: 08:00!"))
-
-
-                                return FormUtils.fnProcessValidation(validationRules, parent)
-
-                            }
-
-
-                            onActiveFocusChanged: {
-                                FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
-                            }
-
-                        }
-                    }
-                    LabelLayout {
-                        labelPos: Qt.AlignTop
-                        errorRectangle: DefaultErrorRec {}
-                        errorMessage: TopErrorMessage {
-                            relatedItem: input_minutes
-                        }
-                        SimpleFormLabel {
-                            text: "Dauer in Minuten"
-                        }
-
-                        TextField {
-                            id:input_minutes
-                            validator: IntValidator {}
-                            enabled: mode==0
-                            font: input_name.font
-                            onTextChanged: {
-                                if (parent.error) {
-                                    validate()
-                                }
-                            }
-
-                            function validate() {
-                                var validationRules = new Array(1)
-                                validationRules[0]
-                                        = FormUtils.fnCreateValidationRule(
-                                            input_minutes.acceptableInput,
-                                            qsTr("Die Minuten angeben Bsp: 45"))
-
-
-                                return FormUtils.fnProcessValidation(validationRules, parent)
-
-                            }
-
-                            onActiveFocusChanged: {
-                                FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
-                            }
-
-                        }
-                    }
-                }
-
-                LabelLayout {
-                    labelPos: Qt.AlignTop
-                    itemMargin: 10
-                    errorRectangle: SexErrorRec {}
-                    errorMessage: TopErrorMessage {
-                        relatedItem: input_weekdays
-                        deltaY: -25
-                    }
-
-                    SimpleFormLabel { text: "Wiederholung jede\nWoche am"}
-
-                    Row {
-                        id: input_weekdays
-
-                        function validate() {
-
-                            var validationRules = new Array(1)
-                            validationRules[0]
-                                    = FormUtils.fnCreateValidationRule(
-                                        form_group.weekFlags > 0,
-                                        qsTr("Mindestens einen Tag auswählen!"))
-
-                            return FormUtils.fnProcessValidation(validationRules, parent)
-                        }
-
-                        spacing: 5
-                        Repeater {
-                            model:ListModel {
-                                ListElement {name: "Mo"; flag: 1}
-                                ListElement {name: "Di" ; flag: 2}
-                                ListElement {name: "Mi"; flag: 4}
-                                ListElement {name: "Do"; flag: 8}
-                                ListElement {name: "Fr"; flag: 16}
-                                ListElement {name: "Sa"; flag: 32}
-                                ListElement {name: "So"; flag: 64}
-                            }
-
-                            delegate:
-                                Item {
-                                width: childrenRect.width
-                                height: childrenRect.height
-
-
-                                Column {
-                                    Label {text:name}
-                                    CheckBox {width: 20
-                                        checked: weekFlags & flag
-                                        enabled: mode==0
-                                        onCheckedChanged: {
-                                            if (checked) {
-                                                form_group.weekFlags = form_group.weekFlags | flag
-                                            } else {
-                                                form_group.weekFlags = form_group.weekFlags ^ flag
-                                            }
-                                        }
-
-                                        onContainsMouseChanged:
-                                            FormUtils.fnShowOrHideErrorMessage(containsMouse, input_weekdays.parent)
-
-                                    }
-
-                                }
-
-                            }
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        acceptedButtons: "NoButton"
-
-                    }
+                TimeSelection {
+                    id:input_timeselection
                 }
             }
             DropArea {

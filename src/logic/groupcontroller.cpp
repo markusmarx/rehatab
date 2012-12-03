@@ -24,9 +24,11 @@ PersonGroup *GroupController::createGroup()
 
 bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
 {
+    qDebug() << Q_FUNC_INFO << group << date;
     Appointment *app;
     int clientCount = group->clientCount();
     bool isNew = false;
+
     if (group->id() < 0) {
         group->setValidFrom(group->date());
         app = new Appointment(this);
@@ -34,20 +36,25 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
     } else {
         app = group->appointment();
     }
+
     app->setDate(group->date());
     app->setName(group->name());
     app->setMinutes(group->minutes());
     app->setIteration(group->iteration());
     app->setValidFrom(group->date());
     app->setValidTo(group->validTo());
-    app->save();
 
     if (isNew) {
         group->setAppointment(app);
         m_allGroups->append(group);
     }
+
     group->setValidFrom(group->date());
     group->save();
+    if (isNew) {
+        app->setPersonGroup(group);
+    }
+    app->save();
 
     //
     // remove clients from group that marked as deleted
@@ -141,15 +148,14 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
 QObjectListModel *GroupController::allGroups()
 {
     PersonGroup* group;
+
     if (m_allGroups->size() == 0) {
         QDjangoQuerySet<PersonGroup> qGroup;
         QDateTime date = QDateTime::currentDateTime();
         qGroup = qGroup.filter((QDjangoWhere("validFrom", QDjangoWhere::LessOrEquals, date)
                                         && (!QDjangoWhere("validTo", QDjangoWhere::IsNull, QVariant())
                                              || QDjangoWhere("validTo", QDjangoWhere::GreaterOrEquals, date))));
-        qGroup.selectRelated();
         QList<QObject*> list;
-
         for (int i = 0; i < qGroup.size(); i++) {
             group = qGroup.at(i);
             group->setClientCount(getCurrentGroup2Person(group->id(), QDateTime::currentDateTime()).count());
@@ -269,15 +275,22 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
 PersonGroup *GroupController::getGroup(int id)
 {
     QDjangoQuerySet<PersonGroup> qs;
+    QDjangoQuerySet<Appointment> qApp;
     PersonGroup* group = qs.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
     group->setClientCount(getCurrentGroup2Person(group->id(), QDateTime::currentDateTime()).count());
+    Appointment* app = qApp.get(QDjangoWhere("personGroup__id", QDjangoWhere::Equals, group->id()));
+    app->setParent(group);
+    group->setAppointment(app);
     return group;
 }
 
 PersonGroup *GroupController::findByAppointmentId(int id)
 {
-    QDjangoQuerySet<PersonGroup> qs;
-    return qs.get(QDjangoWhere("appointment_id", QDjangoWhere::Equals, id));
+    QDjangoQuerySet<Appointment> qs;
+    qs = qs.selectRelated();
+    Appointment* app = qs.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
+
+    return app->personGroup();
 }
 
 bool GroupController::removeGroup(PersonGroup *group)

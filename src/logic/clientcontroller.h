@@ -10,6 +10,7 @@ class Appointment;
 class ClientAppointmentSummary;
 class ClientAppointment;
 class QObjectListModel;
+class PersonAppointment;
 class ClientController : public QObject
 {
     Q_OBJECT
@@ -95,13 +96,37 @@ public:
     Q_INVOKABLE QList<QObject*> getContracts(int personId);
 
 
+    /**
+     *
+     * \brief load contract details
+     */
     Q_INVOKABLE Contract* loadContract(Contract* contract);
+
+    /**
+     * \brief factory method for personappointment
+     */
+    Q_INVOKABLE PersonAppointment* createPersonAppointment();
+
+    /**
+     * \brief save a personappointment, if not exist create one
+     *
+     * \return true if success else false.
+     */
+    Q_INVOKABLE bool savePersonAppointment(PersonAppointment* personApp, Person* p, Contract* c);
+
 signals:
     
 public slots:
 
 private:
     QObjectListModel* m_personList;
+
+    /**
+     * @brief getPersonAppointments return all personappointmentobjects to a person
+     * @param person
+     * @return
+     */
+    QList<PersonAppointment*> getPersonAppointments(Person* person);
     
 };
 
