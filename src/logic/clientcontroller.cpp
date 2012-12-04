@@ -136,7 +136,7 @@ Contract* ClientController::loadContract(Contract* contract)
 PersonAppointment *ClientController::createPersonAppointment()
 {
     PersonAppointment* pApp = new PersonAppointment(this);
-    pApp->setAppointment(pApp);
+    pApp->setAppointment(new Appointment(pApp));
     return pApp;
 }
 
@@ -149,6 +149,7 @@ bool ClientController::savePersonAppointment(PersonAppointment *personApp, Perso
         personApp->setContract(c);
         personApp->save();
         app->setPersonAppointment(personApp);
+        app->setValidFrom(app->date());
         app->save();
     }
 

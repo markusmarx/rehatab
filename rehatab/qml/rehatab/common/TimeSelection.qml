@@ -29,7 +29,15 @@ Column {
 
     }
 
-
+    function iteration() {
+        var iteration = "w 1 "
+        for (var i = 1, k = 1; k <= 7; i=i*2,k++) {
+            if (timeselection.weekFlags & i) {
+                iteration += k.toString()
+            }
+        }
+        return iteration;
+    }
 
     LabelLayout {
         labelPos: Qt.AlignTop

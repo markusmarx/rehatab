@@ -33,15 +33,8 @@ Rectangle {
 
         var inputList = new Array(input_forename, input_surname, input_birth,
                                   input_sex)
-        var success = true
 
-        for (var i = 0; i < inputList.length; ++i) {
-            if (!inputList[i].validate()) {
-                success = false
-            }
-        }
-
-        if (success) {
+        if (FormUtils.fnValidateForm(inputList)) {
             if (!Qt.isQtObject(personObj))
                 personObj = clientController.createPerson();
             personObj.name = input_surname.text

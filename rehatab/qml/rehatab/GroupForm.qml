@@ -37,14 +37,9 @@ Rectangle {
         _group.date = input_timeselection.startDate
         _group.time = input_timeselection.startTime
         _group.minutes = parseInt(input_timeselection.minutes)
-        var iteration = "w 1 "
-        for (var i = 1, k = 1; k <= 7; i=i*2,k++) {
-            if (input_timeselection.weekFlags & i) {
-                iteration += k.toString()
-            }
-        }
 
-        _group.iteration = iteration;
+        _group.iteration = input_timeselection.iteration()
+
         if (mode == 1) {
             console.log(currentDate);
             groupController.saveGroup(_group, currentDate)

@@ -6,6 +6,7 @@
 #include <QFont>
 #include "QDjango.h"
 #include "QDjangoQuerySet.h"
+
 #include "data/person.h"
 #include "data/personlist.h"
 #include "data/qobjectlistmodel.h"
@@ -13,6 +14,7 @@
 #include "data/appointment.h"
 #include "data/contract.h"
 #include "data/persongroup.h"
+#include "data/personappointment.h"
 
 #include "personcontroller.h"
 #include "mystatemaschine.h"
@@ -64,6 +66,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<CalendarModel>("Rehatab", 1, 0, "CalendarModel");
     qmlRegisterType<CalendarTimeLineAttached>();
     qmlRegisterType<AppointmentModel>("Rehatab", 1, 0, "AppointmentModel");
+    qmlRegisterType<PersonAppointment>("Rehatab", 1, 0, "PersonAppointment");
 
 
     QDeclarativePropertyMap *colorMap = new QDeclarativePropertyMap;

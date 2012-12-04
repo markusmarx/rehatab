@@ -24,7 +24,7 @@ public:
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=personAppointmentId")
     Q_CLASSINFO("contract", "db_column=contractId")
     Q_CLASSINFO("client", "db_column=clientId")
-    Q_CLASSINFO("appointment", "db_column=appointmentId")
+    Q_CLASSINFO("appointment", "ignore_field=true")
 
     Person* client() const
     {

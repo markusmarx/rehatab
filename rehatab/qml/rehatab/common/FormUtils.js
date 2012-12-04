@@ -38,3 +38,14 @@ function fnShowOrHideErrorMessage(focus, form) {
         form.fnHideErrorMessage();
     }
 }
+
+function fnValidateForm(inputList) {
+    var success = true
+
+    for (var i = 0; i < inputList.length; ++i) {
+        if (!inputList[i].validate()) {
+            success = false
+        }
+    }
+    return success;
+}
