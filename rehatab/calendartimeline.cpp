@@ -7,6 +7,8 @@
 #include "logic/appointmentmodel.h"
 #include "data/appointment.h"
 #include "data/persongroup.h"
+#include "data/personappointment.h"
+#include "QDjangoQuerySet.h"
 
 QHash<QObject*, CalendarTimeLineAttached*> CalendarTimeLineAttached::attached;
 
@@ -249,7 +251,14 @@ void CalendarTimeLine::appointmentChanged(QDate adate)
 void CalendarTimeLine::updateAppointments(QList<Appointment *> appointmentList)
 {
     foreach(Appointment* app, appointmentList) {
-        addAppointment(app->time(), app->time().addSecs(60*app->minutes()), app->personGroup()->name(), app->id());
+        if (app->isGroupAppointment()) {
+            addAppointment(app->time(), app->time().addSecs(60*app->minutes()), app->personGroup()->name(), app->id());
+        } else {
+            QDjangoQuerySet<PersonAppointment> qs;
+            PersonAppointment* pa = qs.get(QDjangoWhere("id", QDjangoWhere::Equals, app->personAppointment()->id()));
+
+            addAppointment(app->time(), app->time().addSecs(60*app->minutes()), pa->client()->name() + ", " + pa->client()->forename(), app->id());
+        }
     }
 }
 void CalendarTimeLine::appointmentUpdated(Appointment *appointment) {

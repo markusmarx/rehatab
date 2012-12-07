@@ -19,13 +19,13 @@ Appointment *AppointmentController::createAppointment() const
     return app;
 }
 
-Appointment *AppointmentController::retrieve(int id)
+Appointment *AppointmentController::getAppointment(int id)
 {
 
-    /*QDjangoQuerySet<Appointment> appoSet;
+    QDjangoQuerySet<Appointment> appoSet;
     Appointment* appo;
     appo = appoSet.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
-
+/*
     QDjangoQuerySet<Appointment2Person> app2Mem;
     app2Mem = app2Mem.filter(QDjangoWhere("appointment_id", QDjangoWhere::Equals, appo->id()));
 
@@ -42,7 +42,7 @@ Appointment *AppointmentController::retrieve(int id)
     //appo->member()->setList(memList);
     return appo;*/
 
-            return 0;
+    return appo;
 
 }
 
@@ -135,7 +135,6 @@ QList<Appointment *> AppointmentController::getAppointments(QDate from, QDate to
 
     QLOG_DEBUG() << "found " << appSQs.size() << " appointments between " << from << " and " << to;
 
-
     for(int i = 0; i < appSQs.size(); i++) {
 
         app = appSQs.at(i);
@@ -159,8 +158,10 @@ QList<Appointment *> AppointmentController::getAppointments(QDate from, QDate to
             newApp->setIteration(app->iteration());
             newApp->setMinutes(app->minutes());
             newApp->setPersonGroup(app->personGroup());
+            newApp->setPersonAppointment(app->personAppointment());
             appList.append(newApp);
         }
+        dates.clear();
     }
 
     return appList;

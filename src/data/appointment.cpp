@@ -7,7 +7,8 @@
 Appointment::Appointment(QObject *parent) :
     QDjangoModel(parent), m_id(-1)
 {
-    setForeignKey("personGroup", new PersonGroup(this));
+    setPersonGroup(new PersonGroup(this));
+    setPersonAppointment(new PersonAppointment(this));
 }
 
 void Appointment::setValidFrom(QDateTime fromDate)
@@ -78,6 +79,12 @@ void Appointment::setPersonAppointment(PersonAppointment *personApp)
 PersonAppointment *Appointment::personAppointment() const
 {
     return qobject_cast<PersonAppointment*>(foreignKey("personAppointment"));
+}
+
+bool Appointment::isGroupAppointment()
+{
+    if (personGroup()->id() > 0) return true;
+    return false;
 }
 
 void Appointment::setName(QString name)

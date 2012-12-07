@@ -18,7 +18,7 @@ public:
      */
     Q_INVOKABLE Appointment* createAppointment() const;
 
-    Q_INVOKABLE Appointment* retrieve(int id);
+    Q_INVOKABLE Appointment* getAppointment(int id);
 
     Q_INVOKABLE bool remove(Appointment* appointment);
 

@@ -70,6 +70,8 @@ public:
     void setPersonAppointment(PersonAppointment* personApp);
     PersonAppointment* personAppointment() const;
 
+    Q_INVOKABLE bool isGroupAppointment();
+
 signals:
 
 public slots:

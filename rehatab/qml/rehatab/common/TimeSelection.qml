@@ -11,12 +11,17 @@ Column {
     property alias startTime: input_starttime.time
     property alias minutes: input_minutes.text
     property int weekFlags
+    property bool forceIterating: true
     function validate() {
 
         var inputList = new Array(input_startDate,
                                   input_starttime,
-                                  input_minutes,
-                                  input_weekdays)
+                                  input_minutes
+                                  )
+        if (forceIterating) {
+            inputList.push(input_weekdays)
+        }
+
         var success = true
 
         for (var i = 0; i < inputList.length; ++i) {
@@ -30,6 +35,10 @@ Column {
     }
 
     function iteration() {
+        if (timeselection.weekFlags == 0) {
+            return ""
+        }
+
         var iteration = "w 1 "
         for (var i = 1, k = 1; k <= 7; i=i*2,k++) {
             if (timeselection.weekFlags & i) {

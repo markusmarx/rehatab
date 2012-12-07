@@ -9,11 +9,18 @@ Rectangle {
 
     property int gridWidth: 200
     property int gridHeight: 50
+    property Item dialogForm
 
     function fnOpenAppointment(id, day, from) {
         var date = QmlUtil.join(day, from)
-        var form = comp_groupform.createObject(calendarView, {_group: groupController.loadGroup(groupController.findByAppointmentId(id), date), currentDate: date});
-        form.children[0].fnLoadGroup();
+        var app = appointmentController.getAppointment(id);
+        if (app.isGroupAppointment()) {
+            dialogForm = comp_groupform.createObject(calendarView, {_group: groupController.loadGroup(groupController.findByAppointmentId(id), date), currentDate: date});
+            dialogForm.children[0].fnLoadGroup();
+        } else {
+            dialogForm = comp_clientform.createObject(calendarView)
+
+        }
 
     }
 
@@ -90,15 +97,15 @@ Rectangle {
         delegate:
             Rectangle {
 
-                width: gridWidth
-                color: "white"
+            width: gridWidth
+            color: "white"
 
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: Qt.formatDate(date, "ddd dd.MM.")
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: Qt.formatDate(date, "ddd dd.MM.")
 
-                }
             }
+        }
     }
 
     Flickable{
@@ -137,9 +144,9 @@ Rectangle {
 
                 delegate:
                     CalendarDayView {
-                        smooth: false
-                        showTime: false
-                        day: date
+                    smooth: false
+                    showTime: false
+                    day: date
 
 
                 }
@@ -148,74 +155,84 @@ Rectangle {
         }
     }
 
-//    Rectangle {
-//       anchors {
-//           bottom: parent.bottom
-//           right: parent.right
-//           left: parent.left
-//           margins: 2
-//       }
+    //    Rectangle {
+    //       anchors {
+    //           bottom: parent.bottom
+    //           right: parent.right
+    //           left: parent.left
+    //           margins: 2
+    //       }
 
-//       height: 56
-//       opacity: 0.5
-//       color: myPalette.buttonBorder
+    //       height: 56
+    //       opacity: 0.5
+    //       color: myPalette.buttonBorder
 
-//   }
-//    Row {
-//        enabled: !stateMaschine.modal
-//        anchors {
-//            bottom: parent.bottom
-//            left: parent.left
-//            leftMargin: 20
-//            bottomMargin: 5
-//        }
-//        spacing: 0
+    //   }
+    //    Row {
+    //        enabled: !stateMaschine.modal
+    //        anchors {
+    //            bottom: parent.bottom
+    //            left: parent.left
+    //            leftMargin: 20
+    //            bottomMargin: 5
+    //        }
+    //        spacing: 0
 
-//        Button {
-//            height: 50
-//            width: 50
-//            Image {
-//                anchors.verticalCenter: parent.verticalCenter
-//                anchors.horizontalCenter: parent.horizontalCenter
-//                source: "content/button-add.png"
-//                width: 48
-//                height: 48
-//            }
-//            onClicked: {
-//                appointmentDetailView.newAppointment();
+    //        Button {
+    //            height: 50
+    //            width: 50
+    //            Image {
+    //                anchors.verticalCenter: parent.verticalCenter
+    //                anchors.horizontalCenter: parent.horizontalCenter
+    //                source: "content/button-add.png"
+    //                width: 48
+    //                height: 48
+    //            }
+    //            onClicked: {
+    //                appointmentDetailView.newAppointment();
 
-//            }
-//        }
-//        Button {
-//            height: 50
-//            width: 50
-//            Image {
-//                anchors.verticalCenter: parent.verticalCenter
-//                anchors.horizontalCenter: parent.horizontalCenter
-//                source: "content/button-remove.png"
-//                width: 48
-//                height: 48
-//            }
-//            onClicked: {
-//                //personController.removePersons(personGrid.selectionModel().selectedIds())
-//            }
-//        }
-//    }
+    //            }
+    //        }
+    //        Button {
+    //            height: 50
+    //            width: 50
+    //            Image {
+    //                anchors.verticalCenter: parent.verticalCenter
+    //                anchors.horizontalCenter: parent.horizontalCenter
+    //                source: "content/button-remove.png"
+    //                width: 48
+    //                height: 48
+    //            }
+    //            onClicked: {
+    //                //personController.removePersons(personGrid.selectionModel().selectedIds())
+    //            }
+    //        }
+    //    }
 
-Component {
-    id:comp_groupform
-    Rectangle {
-        property alias _group: groupform._group
-        property alias currentDate: groupform.currentDate
-        anchors.fill: parent
-        GroupForm {
-        id:groupform
-        mode: 1
-        anchors.fill: parent
-        onClose: {
-            parent.destroy()
+    Component {
+        id:comp_groupform
+        Rectangle {
+            property alias _group: groupform._group
+            property alias currentDate: groupform.currentDate
+            anchors.fill: parent
+            GroupForm {
+                id:groupform
+                mode: 1
+                anchors.fill: parent
+                onClose: {
+                    dialogForm.destroy()
+                }
+            }
         }
     }
+
+    Component {
+        id: comp_clientform
+        CalClientAppointmentEdit {
+            anchors.fill: parent
+            onClose: {
+                dialogForm.destroy()
+            }
+        }
     }
-}
 }

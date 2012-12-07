@@ -287,7 +287,7 @@ PersonGroup *GroupController::getGroup(int id)
 PersonGroup *GroupController::findByAppointmentId(int id)
 {
     QDjangoQuerySet<Appointment> qs;
-    qs = qs.selectRelated();
+    //qs = qs.selectRelated();
     Appointment* app = qs.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
 
     return app->personGroup();

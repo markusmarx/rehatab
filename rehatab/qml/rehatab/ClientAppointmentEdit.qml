@@ -26,6 +26,7 @@ Rectangle {
                 _personAppointment.appointment.time = input_timeselection.startTime
                 _personAppointment.appointment.minutes = parseInt(input_timeselection.minutes)
                 _personAppointment.appointment.iteration = input_timeselection.iteration()
+                _personAppointment.appointment.name = personObj.name + ", " + personObj.forename
 
                 clientController.savePersonAppointment(_personAppointment, personObj, personObj.contracts.at(0))
             }
@@ -65,6 +66,7 @@ Rectangle {
 
             TimeSelection {
                 id: input_timeselection
+                forceIterating: false
             }
 
         }
