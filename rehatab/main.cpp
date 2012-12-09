@@ -38,7 +38,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 {
 
     QsLogging::Logger& logger = QsLogging::Logger::instance();
-    logger.setLoggingLevel(QsLogging::DebugLevel);
+    logger.setLoggingLevel(QsLogging::TraceLevel);
 
     QsLogging::DestinationPtr debugDestination(
         QsLogging::DestinationFactory::MakeDebugOutputDestination());

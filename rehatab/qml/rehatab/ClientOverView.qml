@@ -135,7 +135,17 @@ Item {
                         text: Qt.formatDate(validTo, "dd.MM.yyyy")
                     }
                 }
+
                 }
+                    LabelLayout {
+                        labelPos: Qt.AlignTop
+                        Label {
+                            text: "Offene Sitzungen"
+                        }
+                        Text {
+                            text: openValue
+                        }
+                    }
                 }
 //                Text {anchors.fill: parent;
 //                    text:

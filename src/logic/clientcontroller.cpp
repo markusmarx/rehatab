@@ -5,7 +5,7 @@
 #include "data/qobjectlistmodel.h"
 #include "QDjangoQuerySet.h"
 #include "data/group2person.h"
-#include "data/persongrouphistory.h"
+#include "data/personcontracthistory.h"
 #include "data/personappointment.h"
 
 ClientController::ClientController(QObject *parent) :
@@ -119,16 +119,12 @@ Contract* ClientController::loadContract(Contract* contract)
 {
     QStringList fields;
     fields << "id";
-    QDjangoQuerySet<Group2Person> group2PersonQuery;
-    QDjangoQuerySet<PersonGroupHistory> pgHistoryQuery;
+    QDjangoQuerySet<PersonContractHistory> pgHistoryQuery;
     int openValue = contract->value();
 
-    QList<QVariantMap> mapList = group2PersonQuery.filter(QDjangoWhere("contract_id", QDjangoWhere::Equals, contract->id())).values(fields);
-    foreach(QVariantMap map, mapList) {
-        int count = pgHistoryQuery.filter(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, map["id"].toInt())
-                     && QDjangoWhere("present", QDjangoWhere::Equals, true)).count();
-        openValue -= count;
-    }
+    int count = pgHistoryQuery.filter(QDjangoWhere("contract_id", QDjangoWhere::Equals, contract->id())
+                 && QDjangoWhere("present", QDjangoWhere::Equals, true)).count();
+    openValue -= count;
     contract->setOpenValue(openValue);
     return contract;
 }

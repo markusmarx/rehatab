@@ -6,8 +6,8 @@
 #include "data/contract.h"
 
 #include "data/appointment.h"
-#include <QDebug>
-#include <data/persongrouphistory.h>
+#include "util/QsLog.h"
+#include <data/personcontracthistory.h>
 GroupController::GroupController(QObject *parent) :
     QObject(parent)
 {
@@ -24,19 +24,22 @@ PersonGroup *GroupController::createGroup()
 
 bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
 {
-    qDebug() << Q_FUNC_INFO << group << date;
+    QLOG_TRACE() << Q_FUNC_INFO << group << date;
     Appointment *app;
     int clientCount = group->clientCount();
     bool isNew = false;
 
     if (group->id() < 0) {
+        QLOG_DEBUG() << "create new appointment";
         group->setValidFrom(group->date());
         app = new Appointment(this);
         isNew = true;
     } else {
+        QLOG_DEBUG() << "load appointment";
         app = group->appointment();
-    }
 
+    }
+    QLOG_DEBUG() << "appointment " << app;
     app->setDate(group->date());
     app->setName(group->name());
     app->setMinutes(group->minutes());
@@ -120,20 +123,21 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
         }
 
         if (date.isValid()) {
-            QDjangoQuerySet<PersonGroupHistory> qsPresence;
-            qsPresence = qsPresence.filter(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, person2Group[p->id()])
+            QDjangoQuerySet<PersonContractHistory> qsPresence;
+            qsPresence = qsPresence.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id())
                     && QDjangoWhere("date", QDjangoWhere::Equals, date));
             if (qsPresence.count() > 0) {
                 QVariantMap updateValues;
                 updateValues["present"] = p->presence();
                 qsPresence.update(updateValues);
             } else {
-                QScopedPointer<PersonGroupHistory> pgH(new PersonGroupHistory());
+                Contract *c = qobject_cast<Contract*>(p->contracts()->at(0));
+                QScopedPointer<PersonContractHistory> pgH(new PersonContractHistory());
                 pgH->setPresent(p->presence()?1:0);
                 pgH->setDate(date);
-                Group2Person  *pg2 = new Group2Person();
-                pg2->setId(person2Group[p->id()]);
-                pgH->setGroup2Person(pg2);
+                pgH->setPersonGroup(group);
+                pgH->setClient(p);
+                pgH->setContract(new Contract(this, c->id()));
                 pgH->save();
             }
         }
@@ -234,8 +238,8 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
     QList<QObject*> personList;
 
     QDjangoQuerySet<Group2Person> qs;
-    QDjangoQuerySet<PersonGroupHistory> qsh;
-    PersonGroupHistory* pgH;
+    QDjangoQuerySet<PersonContractHistory> qsh;
+    PersonContractHistory* pgH;
     if (!date.isValid()) {
         date = QDateTime::currentDateTime();
     }
@@ -256,7 +260,8 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
 
             if (date.isValid()) {
 
-                pgH = qsh.get(QDjangoWhere("group2Person_id", QDjangoWhere::Equals, qs.at(i)->id()) && QDjangoWhere("date", QDjangoWhere::Equals, date));
+                pgH = qsh.get(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id()) && QDjangoWhere("client_id", QDjangoWhere::Equals, p->id())
+                              && QDjangoWhere("date", QDjangoWhere::Equals, date));
                 if (pgH) {
                     qDebug() << pgH->present();
                     p->setPresence(pgH->present());
@@ -274,23 +279,26 @@ PersonGroup *GroupController::loadGroup(PersonGroup *group, QDateTime date)
 
 PersonGroup *GroupController::getGroup(int id)
 {
+    QLOG_TRACE() << Q_FUNC_INFO << id;
     QDjangoQuerySet<PersonGroup> qs;
     QDjangoQuerySet<Appointment> qApp;
     PersonGroup* group = qs.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
     group->setClientCount(getCurrentGroup2Person(group->id(), QDateTime::currentDateTime()).count());
     Appointment* app = qApp.get(QDjangoWhere("personGroup__id", QDjangoWhere::Equals, group->id()));
-    app->setParent(group);
+    //app->setParent(this);
+    QLOG_DEBUG() << "load appointment " << app;
     group->setAppointment(app);
     return group;
 }
 
 PersonGroup *GroupController::findByAppointmentId(int id)
 {
+    QLOG_TRACE() << Q_FUNC_INFO << id;
     QDjangoQuerySet<Appointment> qs;
-    //qs = qs.selectRelated();
     Appointment* app = qs.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
-
-    return app->personGroup();
+    PersonGroup* pg = app->personGroup();
+    pg->setAppointment(app);
+    return pg;
 }
 
 bool GroupController::removeGroup(PersonGroup *group)

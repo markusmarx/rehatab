@@ -59,8 +59,8 @@ Item {
         if (_currentView) {
             _currentView.destroy();
         }
-
-        _currentView = comp_groupform.createObject(pag_contentarea, {_group: groupController.loadGroup(groupController.getGroup(groupId))})
+        var group = groupController.getGroup(groupId)
+        _currentView = comp_groupform.createObject(pag_contentarea, {_group: groupController.loadGroup(group)})
         _currentView.fnLoadGroup()
     }
 

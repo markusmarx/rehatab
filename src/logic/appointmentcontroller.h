@@ -6,6 +6,7 @@
 class Appointment;
 class AppointmentModel;
 class QObjectListModel;
+class PersonAppointment;
 class AppointmentController : public QObject
 {
     Q_OBJECT
@@ -63,6 +64,11 @@ public:
      * @return
      */
     Q_INVOKABLE bool removeAllAppointments(Appointment* appointment);
+
+    /**
+     * \brief load a personappointment for a specific time.
+     */
+    Q_INVOKABLE PersonAppointment* loadPersonAppointment(Appointment* app, QDateTime date);
 
 signals:
     

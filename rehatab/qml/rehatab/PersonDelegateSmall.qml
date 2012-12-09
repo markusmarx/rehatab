@@ -6,6 +6,11 @@ Item {
     width: 246
     height: 50
 
+    property alias name: wName.text
+    property alias forename: wForename.text
+    property date birth
+    property int age
+
     function fnCopy(item) {
         item.name = name
         item.forename = forename
@@ -46,7 +51,6 @@ Item {
 
             Text {
                 id:wName
-                text:name + ", "
                 color: wForename.color
                 font: wForename.font
                 elide: Text.ElideRight
@@ -55,7 +59,6 @@ Item {
             }
             Text {
                 id:wForename
-                text:forename
                 font.family: main_style.header1Font.family
                 font.pixelSize: main_style.header1Font.size
                 font.bold: true

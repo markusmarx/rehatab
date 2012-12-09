@@ -8,7 +8,6 @@ Rectangle {
     id: form_group
 
     property PersonGroup _group
-    property int mode:0
     property date currentDate;
     property bool formError: false
     signal close()
@@ -40,12 +39,8 @@ Rectangle {
 
         _group.iteration = input_timeselection.iteration()
 
-        if (mode == 1) {
-            console.log(currentDate);
-            groupController.saveGroup(_group, currentDate)
-        } else {
-            groupController.saveGroup(_group)
-        }
+        groupController.saveGroup(_group)
+
         fnCloseDialog()
     }
 
@@ -85,7 +80,7 @@ Rectangle {
             Row {
 
                 Button {
-                    text: (mode==0)?"Gruppe speichern": "Termin speichern"
+                    text: "Gruppe speichern"
                     onClicked: {
                         focus = true
                         fnSaveGroup()
@@ -124,7 +119,6 @@ Rectangle {
                     }
                     TextField {
                         id: input_name
-                        enabled: mode==0
                         font {
                             family: main_style.defaultInputFont.family
                             pixelSize: main_style.defaultInputFont.size
@@ -212,27 +206,11 @@ Rectangle {
                         }
                         MouseArea {
                             anchors.fill: parent
-                            enabled: mode==0
                             onClicked: {
                                 _group.personList.remove(id)
                             }
                         }
 
-                        CheckBox {
-                            visible: mode == 1
-                            checked: Qt.isQtObject(_group)? _person.presence: false
-                            onCheckedChanged: {
-                                if (Qt.isQtObject(_group)) {
-                                    _person.presence = checked
-                                    if (!Qt.isQtObject(_contract)) return;
-                                    if (checked) {
-                                        _contract.openValue -= 1
-                                    } else {
-                                        _contract.openValue += 1
-                                    }
-                                }
-                            }
-                        }
                         Text {
                             anchors.top: delegate.bottom
                             anchors.topMargin: 10

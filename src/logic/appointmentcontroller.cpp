@@ -6,6 +6,8 @@
 #include "util/timeiteration.h"
 #include "util/QsLog.h"
 #include "data/persongroup.h"
+#include "data/personappointment.h"
+#include "data/personcontracthistory.h"
 
 AppointmentController::AppointmentController(QObject *parent) :
     QObject(parent), m_appointmentModel(new AppointmentModel(this))
@@ -21,29 +23,10 @@ Appointment *AppointmentController::createAppointment() const
 
 Appointment *AppointmentController::getAppointment(int id)
 {
-
     QDjangoQuerySet<Appointment> appoSet;
     Appointment* appo;
     appo = appoSet.get(QDjangoWhere("id", QDjangoWhere::Equals, id));
-/*
-    QDjangoQuerySet<Appointment2Person> app2Mem;
-    app2Mem = app2Mem.filter(QDjangoWhere("appointment_id", QDjangoWhere::Equals, appo->id()));
-
-
-    //QList<QObject*> memList;
-    Appointment2Person* appo2P;
-    for(int i = 0; i< app2Mem.count(); i++) {
-        //memList.append(app2Mem.at(i)->person());
-        appo2P = app2Mem.at(i);
-        appo->addMember(appo2P->person());
-        appo->setPresent(appo2P->person()->id(), appo2P->present());
-    }
-
-    //appo->member()->setList(memList);
-    return appo;*/
-
     return appo;
-
 }
 
 bool AppointmentController::remove(Appointment *appointment)
@@ -182,4 +165,20 @@ Appointment *AppointmentController::loadAppointment(Appointment *appointment)
 bool AppointmentController::removeAllAppointments(Appointment *appointment)
 {
     return true;
+}
+
+PersonAppointment *AppointmentController::loadPersonAppointment(Appointment *app, QDateTime date)
+{
+    QDjangoQuerySet<PersonAppointment> appQs;
+    QDjangoQuerySet<PersonContractHistory> pchQs;
+
+    PersonAppointment* pApp = appQs.get(QDjangoWhere("id", QDjangoWhere::Equals, app->personAppointment()->id()));
+    PersonContractHistory* pCH = pchQs.get(QDjangoWhere("personAppointment_id", QDjangoWhere::Equals, app->personAppointment()->id()) && QDjangoWhere("date", QDjangoWhere::Equals, date));
+
+    if (pCH) {
+        pApp->client()->setPresence(pCH->present());
+    } else {
+        pApp->client()->setPresence(false);
+    }
+    return pApp;
 }

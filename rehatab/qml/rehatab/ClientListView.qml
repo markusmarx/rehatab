@@ -76,6 +76,13 @@ Item {
             height: 84
             signal openPerson(int personId)
 
+            Component.onCompleted: {
+                person_delegate.name = name
+                person_delegate.forename = forename
+                person_delegate.birth = birth
+                person_delegate.age = age
+            }
+
             MouseArea {
                 id:mouseArea
                 anchors.fill: parent
@@ -107,6 +114,7 @@ Item {
                 id: person_delegate
                 property int oldY
                 property Item oldParent
+
 
             }
 
@@ -229,11 +237,6 @@ Item {
                 }
             }
             PersonDelegateSmall {
-                property string name;
-                property int age;
-                property string forename;
-                property date birth
-
 
             }
 

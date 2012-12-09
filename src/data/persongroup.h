@@ -7,8 +7,8 @@
 #include <QDate>
 #include <QTime>
 #include "data/appointment.h"
+
 class QObjectListModel;
-class Appointment;
 class PersonGroup : public QDjangoModel
 {
     Q_OBJECT
@@ -30,7 +30,6 @@ class PersonGroup : public QDjangoModel
     QHash<int, QVariantList> m_personData;
 
     Appointment* m_appointment;
-
 
     //QByteArray m_data;
 
@@ -96,6 +95,7 @@ public:
 
     Appointment* appointment() const
     {
+        ;
         return m_appointment;
     }
 

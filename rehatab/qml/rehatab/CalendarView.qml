@@ -15,11 +15,15 @@ Rectangle {
         var date = QmlUtil.join(day, from)
         var app = appointmentController.getAppointment(id);
         if (app.isGroupAppointment()) {
-            dialogForm = comp_groupform.createObject(calendarView, {_group: groupController.loadGroup(groupController.findByAppointmentId(id), date), currentDate: date});
-            dialogForm.children[0].fnLoadGroup();
+//            dialogForm = comp_groupform.createObject(calendarView, {_group: groupController.loadGroup(groupController.findByAppointmentId(id), date), currentDate: date});
+//            dialogForm.children[0].fnLoadGroup();
+            dialogForm = comp_calgroupform.createObject(calendarView,  {_group: groupController.loadGroup(groupController.findByAppointmentId(id), date), currentDate: date})
+            dialogForm.fnSetFields()
         } else {
-            dialogForm = comp_clientform.createObject(calendarView)
-
+            dialogForm = comp_calclientform.createObject(calendarView,
+                                                         {_personAppointment: appointmentController.loadPersonAppointment(appointmentController.getAppointment(id), date)
+                                                             , currentDate: date})
+            dialogForm.fnSetFields()
         }
 
     }
@@ -217,7 +221,6 @@ Rectangle {
             anchors.fill: parent
             GroupForm {
                 id:groupform
-                mode: 1
                 anchors.fill: parent
                 onClose: {
                     dialogForm.destroy()
@@ -227,9 +230,21 @@ Rectangle {
     }
 
     Component {
-        id: comp_clientform
+        id: comp_calclientform
         CalClientAppointmentEdit {
             anchors.fill: parent
+            onClose: {
+                dialogForm.destroy()
+            }
+        }
+    }
+
+    Component {
+        id: comp_calgroupform
+        CalGroupAppointmentEdit {
+            anchors {
+                fill: parent
+            }
             onClose: {
                 dialogForm.destroy()
             }
