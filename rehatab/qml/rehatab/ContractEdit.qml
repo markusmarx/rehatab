@@ -91,7 +91,7 @@ Rectangle {
                             relatedItem: input_reha
                         }
                         Text {
-                            text: "<b>Rehabilitationssport</b>\ngemäß §43 Abs.1 Satz 1 SGB V"
+                            text: "<b>Rehabilitationssport</b> gemäß §43 Abs.1 Satz 1 SGB V i.V. m. § 44 Abs. 1 Nr. 3 SGB IX"
 
                         }
 
@@ -136,6 +136,42 @@ Rectangle {
                         }
                         CheckBox {
                             id: input_onehundert
+                            width: 25
+                        }
+                    }
+
+                    LabelLayout {
+                        labelPos: Qt.AlignRight
+                        labelMargin: 5
+
+                        errorRectangle: DefaultErrorRec {}
+                        errorMessage: TopErrorMessage {
+                            relatedItem: input_reha
+                        }
+                        Text {
+                            text: "Übungseinheiten"
+
+                        }
+                        TextField {
+                            id: input_manual
+                            width: 50
+                        }
+                    }
+
+                    LabelLayout {
+                        labelPos: Qt.AlignRight
+                        labelMargin: 5
+
+                        errorRectangle: DefaultErrorRec {}
+                        errorMessage: TopErrorMessage {
+                            relatedItem: input_reha
+                        }
+                        Text {
+                            text: "120 Übungseinheiten"
+
+                        }
+                        CheckBox {
+                            id: input_1
                             width: 25
                         }
                     }
