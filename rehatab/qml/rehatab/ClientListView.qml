@@ -7,7 +7,6 @@ Item {
     property int selectedClientId;
     z: -1
 
-
     function fnClearSelection() {
         lst_view.currentIndex = -1
     }

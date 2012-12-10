@@ -77,6 +77,7 @@ Rectangle {
             anchors.right: parent.right
 
 
+
             Row {
 
                 Button {
@@ -189,8 +190,8 @@ Rectangle {
                 Repeater {
                     model: _group.personList
                     delegate: Item {
-                        width: delegate.width
-                        height: delegate.height
+                        width: person_delegate.width
+                        height: person_delegate.height
 
                         property Person _person
                         property Contract _contract
@@ -199,10 +200,17 @@ Rectangle {
                             _person = _group.personList.findById(id);
                             if (_person.contracts.size() > 0)
                                 _contract = clientController.loadContract(_person.contracts.at(0));
+
+
+                            person_delegate.name = name
+                            person_delegate.forename = forename
+                            person_delegate.birth = birth
+                            person_delegate.age = age
+
                         }
 
                         PersonDelegateSmall {
-                            id: delegate
+                            id: person_delegate
                         }
                         MouseArea {
                             anchors.fill: parent
@@ -212,9 +220,9 @@ Rectangle {
                         }
 
                         Text {
-                            anchors.top: delegate.bottom
+                            anchors.top: person_delegate.bottom
                             anchors.topMargin: 10
-                            anchors.left: delegate.left
+                            anchors.left: person_delegate.left
                             anchors.leftMargin: 10
                             text: Qt.isQtObject(_contract)?_contract.openValue + " offene Sitzungen":""
                             font.family: main_style.header2Font.family
@@ -225,5 +233,15 @@ Rectangle {
                     }
                 }
             }
+            ClientListView {
+                anchors {
+                    right: parent.right
+                    top: parent.top
+                    bottom: parent.bottom
+                }
+                width: 200
+            }
+
+
         }
     }

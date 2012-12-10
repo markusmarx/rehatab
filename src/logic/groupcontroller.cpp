@@ -125,7 +125,7 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
         if (date.isValid()) {
             QDjangoQuerySet<PersonContractHistory> qsPresence;
             qsPresence = qsPresence.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id())
-                    && QDjangoWhere("date", QDjangoWhere::Equals, date));
+                    && QDjangoWhere("client_id", QDjangoWhere::Equals, p->id()) && QDjangoWhere("date", QDjangoWhere::Equals, date));
             if (qsPresence.count() > 0) {
                 QVariantMap updateValues;
                 updateValues["present"] = p->presence();

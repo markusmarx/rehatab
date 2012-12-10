@@ -1,11 +1,22 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import QmlFeatures 1.0
-
+import "navigation.js" as NavJS
 Rectangle {
+    id: root_item
     width: 1024
     height: 768
     color:main_style.defaultBg
+
+    Component.onCompleted: {
+        stateMaschine.calendarMenuState.isActiveChanged.connect(NavJS.fnSwitchToCalendar)
+        stateMaschine.groupMenuState.isActiveChanged.connect(NavJS.fnSwitchToGroupView)
+        stateMaschine.personMenuState.isActiveChanged.connect(NavJS.fnSwitchToClientView)
+        NavJS.fnSwitchToClientView(true)
+
+    }
+
+
     Style {
         id: main_style
     }
@@ -20,24 +31,39 @@ Rectangle {
 
 
     Item {
+        clip: true
+        id: main_content
         anchors.top: main_nav.bottom
         anchors.topMargin: 20
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        ClientAndGroupView {
-             anchors.fill: parent
-             visible: stateMaschine.personMenuState.isActive || stateMaschine.groupMenuState.isActive
-        }
-
-        CalendarView {
-            anchors.fill: parent
-            visible: stateMaschine.calendarMenuState.isActive
-        }
-
-
     }
 
+    //
+    // -- main views
+    //
+
+    Component {
+        id: comp_calendar
+        CalendarView {
+            anchors.fill: parent
+        }
+    }
+
+    Component {
+        id: comp_groupoverview
+        GroupOverView {
+            anchors.fill: parent
+        }
+    }
+
+    Component {
+        id: comp_clientoverview
+        ClientAndGroupView {
+            anchors.fill: parent
+        }
+    }
 
 }

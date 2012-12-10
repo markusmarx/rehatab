@@ -12,7 +12,7 @@ Item {
             _currentView.destroy()
         }
 
-        _currentView = comp_clientform.createObject(pag_contentarea);
+        _currentView = comp_clientform.createObject(main_content);
         _currentView.forceActiveFocus()
     }
 
@@ -24,15 +24,16 @@ Item {
                 _currentView.destroy()
 
             if (_lastSelectedClientId >= 0) {
-                _currentView = comp_clientoverview.createObject(pag_contentarea, {opacity:0,
+                _currentView = comp_clientview.createObject(pag_contentarea, {opacity:0,
                                                                 _person: clientController.loadPerson(clientController.getPerson(_lastSelectedClientId))
                                                                     } )
                 //_currentView.fnLoadClient(_lastSelectedClientId);
                 _currentView.forceActiveFocus()
                 _currentView.opacity = 1
+
             }
 
-
+            lst_view.visible = true
         } else {
             _currentView.destroy()
 
@@ -40,14 +41,6 @@ Item {
 
     }
 
-    function fnOpenCloseGroupView(open) {
-        if (open) {
-            if (_currentView)
-                _currentView.destroy()
-
-            _currentView = comp_groupoverview.createObject(pag_contentarea)
-        }
-    }
 
     function fnSwitchToClientView(open) {
         if (open) {
@@ -55,27 +48,11 @@ Item {
         }
     }
 
-    function fnOpenGroupForm(groupId) {
-        if (_currentView) {
-            _currentView.destroy();
-        }
-        var group = groupController.getGroup(groupId)
-        _currentView = comp_groupform.createObject(pag_contentarea, {_group: groupController.loadGroup(group)})
-        _currentView.fnLoadGroup()
-    }
-
-    function fnNewGroup() {
-        if (_currentView) {
-            _currentView.destroy();
-        }
-        _currentView = comp_groupform.createObject(pag_contentarea)
-    }
-
 
     Component.onCompleted: {
-        stateMaschine.groupMenuState.isActiveChanged.connect(fnOpenCloseGroupView)
+
         stateMaschine.openPersonState.isActiveChanged.connect(fnOpenCloseClientOverView)
-        stateMaschine.personMenuState.isActiveChanged.connect(fnSwitchToClientView)
+
     }
 
 
@@ -87,28 +64,15 @@ Item {
     }
 
     Component {
-        id: comp_clientoverview
+        id: comp_clientview
         ClientOverView {
             anchors.fill: parent
         }
     }
 
-    Component {
-        id: comp_groupoverview
-        GroupOverView {
-            anchors.fill: parent
-        }
-    }
 
-    Component {
-        id:comp_groupform
-        GroupForm {
-            anchors.fill: parent
-            onClose: {
-                fnOpenCloseGroupView(true)
-            }
-        }
-    }
+
+
 
     Component {
         id: comp_contractedit

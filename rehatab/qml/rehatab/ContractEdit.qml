@@ -80,160 +80,179 @@ Rectangle {
             }
 
 
-            LabelLayout {
-                labelPos: Qt.AlignTop
-                labelMargin: 5
+            Row {
+                Column {
+                    LabelLayout {
+                        labelPos: Qt.AlignRight
+                        labelMargin: 5
 
-                errorRectangle: DefaultErrorRec {}
-                errorMessage: TopErrorMessage {
-                    relatedItem: contract_wValidFrom
-                }
-                SimpleFormLabel {
-                    text: "Vertragsende"
-                }
+                        errorRectangle: DefaultErrorRec {}
+                        errorMessage: TopErrorMessage {
+                            relatedItem: input_reha
+                        }
+                        Text {
+                            text: "<b>Rehabilitationssport</b>\ngemäß §43 Abs.1 Satz 1 SGB V"
 
-                DateEdit {
-                    id: contract_wValidFrom
-                    textColor:  main_style.defaultInputFont.color
-                    inputMask: "99.99.9999"
-                    fieldWidth: 150
-                    font.family: main_style.defaultInputFont.family
-                    font.pixelSize: main_style.defaultInputFont.size
-                    KeyNavigation.tab: contract_wValidTo
+                        }
 
-                    function validate() {
+                        CheckBox {
+                            id: input_reha
+                            width: 25
+                        }
 
-                        var validationRules = new Array(1)
-                        validationRules[0]
-                                = FormUtils.fnCreateValidationRule(
-                                    parseInt(contract_wValidFrom.text.charAt(0)) >= 0,
-                                    qsTr("Ein Datum eingeben!"))
-                        validationRules[1]
-                                = FormUtils.fnCreateValidationRule(
-                                    contract_wValidFrom.validDate,
-                                    qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
-
-                        return FormUtils.fnProcessValidation(validationRules, parent)
                     }
+                    Text {
+                        text: "für"
 
-                    onActiveFocusChanged: {
-                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
                     }
+                    LabelLayout {
+                        labelPos: Qt.AlignRight
+                        labelMargin: 5
 
-                    onTextChanged: {
-                        if (parent && parent.error) {
-                            validate()
+                        errorRectangle: DefaultErrorRec {}
+                        errorMessage: TopErrorMessage {
+                            relatedItem: input_reha
+                        }
+                        Text {
+                            text: "50 Übungseinheiten"
+
+                        }
+                        CheckBox {
+                            id: input_fifty
+                            width: 25
                         }
                     }
+                    LabelLayout {
+                        labelPos: Qt.AlignRight
+                        labelMargin: 5
 
-                }
-            }
-            LabelLayout {
-                labelPos: Qt.AlignTop
-                labelMargin: 5
+                        errorRectangle: DefaultErrorRec {}
+                        errorMessage: TopErrorMessage {
+                            relatedItem: input_reha
+                        }
+                        Text {
+                            text: "120 Übungseinheiten"
 
-                errorRectangle: DefaultErrorRec {}
-                errorMessage: TopErrorMessage {
-                    relatedItem: contract_wValidTo
-                }
-
-                SimpleFormLabel {
-                    text: "Vertragsende"
-                }
-
-                DateEdit {
-                    id: contract_wValidTo
-                    textColor:  main_style.defaultInputFont.color
-                    inputMask: "99.99.9999"
-                    fieldWidth: 150
-                    font.family: main_style.defaultInputFont.family
-                    font.pixelSize: main_style.defaultInputFont.size
-                    KeyNavigation.tab: contract_wValidFrom
-
-                    function validate() {
-
-                        var validationRules = new Array(1)
-                        validationRules[0]
-                                = FormUtils.fnCreateValidationRule(
-                                    parseInt(contract_wValidTo.text.charAt(0)) >= 0,
-                                    qsTr("Ein Datum eingeben!"))
-                        validationRules[1]
-                                = FormUtils.fnCreateValidationRule(
-                                    contract_wValidTo.validDate,
-                                    qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
-
-                        validationRules[2]
-                                = FormUtils.fnCreateValidationRule(
-                                    contract_wValidTo.date > contract_wValidFrom.date ,
-                                    qsTr("Das Ablaufdatum muss nach dem Startdatum kommen!"))
-
-                        return FormUtils.fnProcessValidation(validationRules, parent)
-                    }
-
-                    onActiveFocusChanged: {
-                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
-                    }
-
-                    onTextChanged: {
-                        if (parent && parent.error) {
-                            validate()
+                        }
+                        CheckBox {
+                            id: input_onehundert
+                            width: 25
                         }
                     }
+                }
+
+
+                Column {
 
                 }
             }
 
-//            LabelLayout {
-//                id:lbl
-//                labelPos: Qt.AlignTop
-//                labelMargin: 5
-//                errorRectangle: DefaultErrorRec {}
-//                errorMessage: TopErrorMessage {
-//                    relatedItem: input_value
-//                }
 
-//                SimpleFormLabel {
-//                    text: "Value"
-//                }
+            Row {
+                LabelLayout {
+                    labelPos: Qt.AlignLeft
+                    labelMargin: 5
 
-//                TextField {
-//                    id: input_value
-//                    textColor: main_style.defaultInputFont.color
-//                    width: 250
+                    errorRectangle: DefaultErrorRec {}
+                    errorMessage: TopErrorMessage {
+                        relatedItem: contract_wValidFrom
+                    }
+                    SimpleFormLabel {
+                        text: "Für den Zeitraum vom"
+                    }
 
-//                    font {
-//                        family: main_style.defaultInputFont.family
-//                        pixelSize: main_style.defaultInputFont.size
-//                    }
+                    DateEdit {
+                        id: contract_wValidFrom
+                        textColor:  main_style.defaultInputFont.color
+                        inputMask: "99.99.9999"
+                        fieldWidth: 150
+                        font.family: main_style.defaultInputFont.family
+                        font.pixelSize: main_style.defaultInputFont.size
+                        KeyNavigation.tab: contract_wValidTo
 
-//                    function validate() {
-//                        var validationRules = new Array(1)
-//                        validationRules[0]
-//                                = FormUtils.fnCreateValidationRule(
-//                                    input_value.text.length > 0,
-//                                        qsTr("Der Wert eingeben werden!"))
+                        function validate() {
 
+                            var validationRules = new Array(1)
+                            validationRules[0]
+                                    = FormUtils.fnCreateValidationRule(
+                                        parseInt(contract_wValidFrom.text.charAt(0)) >= 0,
+                                        qsTr("Ein Datum eingeben!"))
+                            validationRules[1]
+                                    = FormUtils.fnCreateValidationRule(
+                                        contract_wValidFrom.validDate,
+                                        qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
 
-//                        return FormUtils.fnProcessValidation(validationRules, parent)
-//                    }
+                            return FormUtils.fnProcessValidation(validationRules, parent)
+                        }
 
+                        onActiveFocusChanged: {
+                            FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
+                        }
 
+                        onTextChanged: {
+                            if (parent && parent.error) {
+                                validate()
+                            }
+                        }
 
-//                    onTextChanged: {
-//                        if (parent.error) {
-//                            validate()
-//                        }
-//                    }
-//                    onActiveFocusChanged: {
-//                        FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
-//                    }
+                    }
+                }
+                LabelLayout {
+                    labelPos: Qt.AlignLeft
+                    labelMargin: 5
 
+                    errorRectangle: DefaultErrorRec {}
+                    errorMessage: TopErrorMessage {
+                        relatedItem: contract_wValidTo
+                    }
 
-//                }
+                    SimpleFormLabel {
+                        text: "längstens bis"
+                    }
 
-//            }
+                    DateEdit {
+                        id: contract_wValidTo
+                        textColor:  main_style.defaultInputFont.color
+                        inputMask: "99.99.9999"
+                        fieldWidth: 150
+                        font.family: main_style.defaultInputFont.family
+                        font.pixelSize: main_style.defaultInputFont.size
+                        KeyNavigation.tab: contract_wValidFrom
+
+                        function validate() {
+
+                            var validationRules = new Array(1)
+                            validationRules[0]
+                                    = FormUtils.fnCreateValidationRule(
+                                        parseInt(contract_wValidTo.text.charAt(0)) >= 0,
+                                        qsTr("Ein Datum eingeben!"))
+                            validationRules[1]
+                                    = FormUtils.fnCreateValidationRule(
+                                        contract_wValidTo.validDate,
+                                        qsTr("Ein gültiges Datum eingeben! Bsp: 12.10.2012"))
+
+                            validationRules[2]
+                                    = FormUtils.fnCreateValidationRule(
+                                        contract_wValidTo.date > contract_wValidFrom.date ,
+                                        qsTr("Das Ablaufdatum muss nach dem Startdatum kommen!"))
+
+                            return FormUtils.fnProcessValidation(validationRules, parent)
+                        }
+
+                        onActiveFocusChanged: {
+                            FormUtils.fnShowOrHideErrorMessage(activeFocus || focus, parent)
+                        }
+
+                        onTextChanged: {
+                            if (parent && parent.error) {
+                                validate()
+                            }
+                        }
+
+                    }
+                }
+            }
 
         }
-
     }
 }

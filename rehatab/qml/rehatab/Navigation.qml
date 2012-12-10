@@ -1,7 +1,7 @@
 import QtQuick 1.1
 
 Item {
-    z:5
+    z:0
     Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left

@@ -18,7 +18,7 @@ Item {
     }
 
     function fnEditClient() {
-        comp_clientform.createObject(pag_contentarea, {personObj: _person});
+        comp_clientform.createObject(main_content, {personObj: _person});
     }
 
     function fnNewClientAppointment() {

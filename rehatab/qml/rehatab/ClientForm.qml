@@ -60,11 +60,20 @@ Rectangle {
     color: "white"
 
     FocusScope {
+
         Column {
             anchors.fill: parent
 
             anchors.leftMargin: 20
             spacing: 10
+            Text {
+                text: qsTr("Neuen Klienten anlegen")
+                font {
+                    family: main_style.defaultInputFont.family
+                    pixelSize: main_style.defaultInputFont.size
+                }
+            }
+
             Row {
                 Button {
                     text: "Neuen Klient speichern"

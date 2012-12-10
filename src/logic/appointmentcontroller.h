@@ -70,6 +70,11 @@ public:
      */
     Q_INVOKABLE PersonAppointment* loadPersonAppointment(Appointment* app, QDateTime date);
 
+    /**
+     * \brief save a personal appointment.
+     */
+    Q_INVOKABLE bool savePersonAppointment(PersonAppointment* papp, QDateTime date);
+
 signals:
     
 private:

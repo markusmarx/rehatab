@@ -182,3 +182,23 @@ PersonAppointment *AppointmentController::loadPersonAppointment(Appointment *app
     }
     return pApp;
 }
+
+bool AppointmentController::savePersonAppointment(PersonAppointment *papp, QDateTime date)
+{
+    QDjangoQuerySet<PersonContractHistory> pchQs;
+    QScopedPointer<PersonContractHistory> pCH(
+            pchQs.get(QDjangoWhere("personAppointment_id",
+                                   QDjangoWhere::Equals, papp->id())
+                                   && QDjangoWhere("date", QDjangoWhere::Equals, date)));
+
+    if (pCH.isNull()) {
+        pCH.reset(new PersonContractHistory(this));
+        pCH->setClient(papp->client());
+        pCH->setContract(papp->contract());
+        pCH->setPersonAppointment(papp);
+        pCH->setDate(date);
+    }
+    pCH->setPresent(papp->client()->presence());
+    return pCH->save();
+
+}

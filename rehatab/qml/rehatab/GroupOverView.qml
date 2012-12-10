@@ -6,12 +6,32 @@ Item {
     id: group_overview
     anchors.fill: parent
 
-
-
     function fnLinkPersonToGroup(personId, groupId) {
         console.log("link person " + personId + " to " + groupId)
         groupController.addPersonToGroup(clientController.loadPerson(clientController.getPerson(personId)),
                                          groupController.allGroups().findById(groupId));
+    }
+
+    function fnOpenGroupForm(groupId) {
+        var group = groupController.getGroup(groupId)
+        var groupView = comp_groupform.createObject(main_content, {_group: groupController.loadGroup(group)})
+        groupView.fnLoadGroup()
+    }
+
+    function fnNewGroup() {
+
+        comp_groupform.createObject(main_content)
+    }
+
+    Component {
+        id:comp_groupform
+        GroupForm {
+            id:group_form
+            anchors.fill: parent
+            onClose: {
+                group_form.destroy()
+            }
+        }
     }
 
 
