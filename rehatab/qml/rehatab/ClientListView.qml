@@ -188,9 +188,46 @@ Item {
             } else {
                 highlighter.y = _visibleCurrentItem.y
             }
+
+            verticalScrollBar.blockupdates = true
+            verticalScrollBar.value = contentY
+            verticalScrollBar.blockupdates = false
+        }
+
+
+        onContentHeightChanged: {
+            if (lst_view.height > 0)
+                verticalScrollBar.maximumValue = lst_view.contentHeight >= lst_view.height? lst_view.contentHeight-lst_view.height:0;
+        }
+
+        onHeightChanged: {
+            if (lst_view.height > 0)
+                verticalScrollBar.maximumValue = lst_view.contentHeight >= lst_view.height? lst_view.contentHeight-lst_view.height:0;
         }
     }
 
+    ScrollBar {
+        id: verticalScrollBar
+        z:1
+        height: lst_view.height
+        anchors.right: lst_view.right
+        anchors.rightMargin: 20
+        opacity: lst_view.contentHeight > lst_view.height
+        orientation: Qt.Vertical
+        maximumValue: lst_view.contentHeight > lst_view.height? lst_view.contentHeight-lst_view.height:0
+        minimumValue: 0
+        property bool blockupdates: false
+
+        onValueChanged: {
+            if (!blockupdates) {
+                lst_view.contentY = value;
+            }
+        }
+        Behavior on opacity {
+            NumberAnimation { duration: 300}
+        }
+
+    }
 
     Item {
         id: highlighter
@@ -239,34 +276,35 @@ Item {
 
             }
 
-            Rectangle {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                width: 50
-                height: 50
-                visible: stateMaschine.groupMenuState.isActive
-                color: "grey"
-                opacity: 0.75
+//            Rectangle {
+//                anchors.horizontalCenter: parent.horizontalCenter
+//                anchors.verticalCenter: parent.verticalCenter
+//                width: 50
+//                height: 50
+//                visible: stateMaschine.groupMenuState.isActive
+//                color: "grey"
+//                opacity: 0.75
 
-                DragArea {
-                    anchors.fill: parent
-                    delegate: comp_persondragdelegate
-                    supportedActions: Qt.LinkAction
-                    autoStart: true
-                    data {
-                        text: id
-                        source: parent
-                    }
-                    onDrop: {
-                        console.log("Drag Area: target accepted the drop with action : " + action)
-                        parent.opacity = 0.75
-                    }
+//                DragArea {
+//                    anchors.fill: parent
+//                    delegate: comp_persondragdelegate
+//                    supportedActions: Qt.LinkAction
+//                    autoStart: true
+//                    data {
+//                        text: id
+//                        source: parent
+//                    }
+//                    onDrop: {
+//                        console.log("Drag Area: target accepted the drop with action : " + action)
+//                        parent.opacity = 0.75
+//                    }
 
-                    onDragStarted: {
-                        parent.opacity = 0
-                    }
-                }
-            }
+//                    onDragStarted: {
+//                        parent.opacity = 0
+
+//                    }
+//                }
+//            }
         }
     }
 

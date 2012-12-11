@@ -88,7 +88,7 @@ Rectangle {
                     }
                 }
                 Button {
-                    text: "Dialog schließen"
+                    text: "Abbrechen"
                     onClicked: {
                         focus = true
                         fnCloseDialog();

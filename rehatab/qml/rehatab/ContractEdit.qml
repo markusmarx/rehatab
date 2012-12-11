@@ -9,11 +9,16 @@ Rectangle {
     property Contract contractObj
     property Person personObj
     property bool formError: false
+    property int _value: -1
 
     function fnSaveContract() {
 
-        var inputList = new Array(contract_wValidFrom, contract_wValidTo)
+        var inputList = new Array(input_fifty, input_120, input_manual, contract_wValidFrom, contract_wValidTo)
         var success = true
+
+        if (input_fifty.checked) _value = 50
+        if (input_120.checked) _value = 120
+        if (input_manual.text != "") _value = parseInt(input_manual.text)
 
         for (var i = 0; i < inputList.length; ++i) {
             if (!inputList[i].validate()) {
@@ -28,7 +33,7 @@ Rectangle {
             contractObj.validFrom = Util.parseDate(contract_wValidFrom.text)
             if (contract_wValidTo.validDate)
                 contractObj.validTo = Util.parseDate(contract_wValidTo.text)
-            contractObj.value = 50
+            contractObj.value = _value
             contractObj.type = 0
             clientController.saveContract(contractObj, personObj)
             fnCloseContractForm()
@@ -49,6 +54,17 @@ Rectangle {
 
     function newItem(contract) {
         contractObj = contract;
+    }
+
+    function fnRehaVlidate(itemParent) {
+
+        var validationRules = new Array(1)
+        validationRules[0]
+                = FormUtils.fnCreateValidationRule(
+                    _value > 0,
+                    qsTr("Eine Übungseinheit wählen!"))
+
+        return FormUtils.fnProcessValidation(validationRules, itemParent)
     }
 
 
@@ -82,6 +98,7 @@ Rectangle {
 
             Row {
                 Column {
+                    spacing: 10
                     LabelLayout {
                         labelPos: Qt.AlignRight
                         labelMargin: 5
@@ -98,6 +115,8 @@ Rectangle {
                         CheckBox {
                             id: input_reha
                             width: 25
+                            enabled: false
+                            checked: true
                         }
 
                     }
@@ -109,41 +128,50 @@ Rectangle {
                         labelPos: Qt.AlignRight
                         labelMargin: 5
 
-                        errorRectangle: DefaultErrorRec {}
+                        errorRectangle: SexErrorRec {}
                         errorMessage: TopErrorMessage {
-                            relatedItem: input_reha
+                            relatedItem: input_fifty
                         }
+
+
                         Text {
-                            text: "50 Übungseinheiten"
+                            text: "50 Übungseinheiten / 18 Monate"
 
                         }
                         CheckBox {
                             id: input_fifty
                             width: 25
+
+                            function validate() {
+                                return fnRehaVlidate(parent)
+                            }
                         }
                     }
                     LabelLayout {
                         labelPos: Qt.AlignRight
                         labelMargin: 5
 
-                        errorRectangle: DefaultErrorRec {}
+                        errorRectangle: SexErrorRec {}
                         errorMessage: TopErrorMessage {
                             relatedItem: input_reha
                         }
                         Text {
-                            text: "120 Übungseinheiten"
+                            text: "120 Übungseinheiten / 36 Monate"
 
                         }
                         CheckBox {
-                            id: input_onehundert
+                            id: input_120
                             width: 25
+                            function validate() {
+                                return fnRehaVlidate(parent)
+                            }
                         }
                     }
 
                     LabelLayout {
                         labelPos: Qt.AlignRight
                         labelMargin: 5
-
+                        itemMargin: 5
                         errorRectangle: DefaultErrorRec {}
                         errorMessage: TopErrorMessage {
                             relatedItem: input_reha
@@ -155,26 +183,12 @@ Rectangle {
                         TextField {
                             id: input_manual
                             width: 50
+                            function validate() {
+                                return fnRehaVlidate(parent)
+                            }
                         }
                     }
 
-                    LabelLayout {
-                        labelPos: Qt.AlignRight
-                        labelMargin: 5
-
-                        errorRectangle: DefaultErrorRec {}
-                        errorMessage: TopErrorMessage {
-                            relatedItem: input_reha
-                        }
-                        Text {
-                            text: "120 Übungseinheiten"
-
-                        }
-                        CheckBox {
-                            id: input_1
-                            width: 25
-                        }
-                    }
                 }
 
 
@@ -185,8 +199,9 @@ Rectangle {
 
 
             Row {
+                spacing: 5
                 LabelLayout {
-                    labelPos: Qt.AlignLeft
+                    labelPos: Qt.AlignTop
                     labelMargin: 5
 
                     errorRectangle: DefaultErrorRec {}
@@ -234,7 +249,7 @@ Rectangle {
                     }
                 }
                 LabelLayout {
-                    labelPos: Qt.AlignLeft
+                    labelPos: Qt.AlignTop
                     labelMargin: 5
 
                     errorRectangle: DefaultErrorRec {}

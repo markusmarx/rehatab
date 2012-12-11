@@ -9,6 +9,8 @@ folder_01.source = qml/rehatab
 folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 
+DESTDIR=dist
+
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
 
@@ -83,4 +85,3 @@ OTHER_FILES +=
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../qt.libs/ $$QDJANGO_DB_LIBS
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../qt.libs/ $$QDJANGO_DB_LIBS
 else:unix:!macx:!symbian: LIBS += -L$$PWD/../../../qt.libs/ $$QDJANGO_DB_LIBS
-

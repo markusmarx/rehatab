@@ -36,19 +36,48 @@
 #include <QDebug>
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
+    QScopedPointer<QApplication> app(createApplication(argc, argv));
+    app->addLibraryPath(app->applicationDirPath() + "/plugins");
 
+    QSettings cfg(QSettings::IniFormat, QSettings::UserScope, "FoolSoft", "rehatab");
+    QDir settingsDir = QFileInfo(cfg.fileName()).absoluteDir();
+
+    if (!settingsDir.exists()) {
+        if (!settingsDir.mkpath(".")) {
+            QMessageBox msgBox;
+            msgBox.setText(app->tr("Das Programm wurde nicht initialisiert."));
+            msgBox.setInformativeText(app->tr("Kontaktieren sie den Support!"));
+            msgBox.setStandardButtons(QMessageBox::Ok);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            msgBox.exec();
+            return 1;
+        }
+    } else if (cfg.value("process").toBool()) {
+        QMessageBox msgBox;
+        msgBox.setText(app->tr("Das Programm ist abgestürtzt."));
+        msgBox.setInformativeText(app->tr("Kontaktieren sie den Support!"));
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        msgBox.exec();
+    }
+
+    cfg.setValue("process", true);
+
+    qDebug() << "load setting from " + QFileInfo(cfg.fileName()).absolutePath();
     QsLogging::Logger& logger = QsLogging::Logger::instance();
     logger.setLoggingLevel(QsLogging::TraceLevel);
 
     QsLogging::DestinationPtr debugDestination(
-        QsLogging::DestinationFactory::MakeDebugOutputDestination());
+                QsLogging::DestinationFactory::MakeDebugOutputDestination());
+
+    QsLogging::DestinationPtr fileDestination(
+                QsLogging::DestinationFactory::MakeFileDestination(settingsDir.absolutePath() + "/logfile.log"));
 
     logger.addDestination(debugDestination.get());
+    logger.addDestination(fileDestination.get());
 
-    QScopedPointer<QApplication> app(createApplication(argc, argv));
-    app->addLibraryPath(app->applicationDirPath() + "/plugins");
-
-    QDjangoDatabaseManager *dbm = new QDjangoDatabaseManager(DatabaseManager::SQLITE, "", "rehatab.db.1", "default");
+    QDjangoDatabaseManager *dbm = new QDjangoDatabaseManager(DatabaseManager::SQLITE, "",
+                                                             settingsDir.absolutePath()+ "/rehatab.db", "default");
 
     dbm->open("", "", false);
 
@@ -100,5 +129,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.setMainQmlFile(QLatin1String("qml/rehatab/main.qml"));
     viewer.showExpanded();
 
-    return app->exec();
+    bool res = app->exec();
+    cfg.setValue("process", false);
+
+    return res;
 }

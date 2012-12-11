@@ -41,6 +41,7 @@ Item {
         }
         Flow {
             width: parent.width-10
+            spacing: 10
             function updateElide() {
                 if (wName.pos.y != wForename.pos.y) {
                     wName.width = width-10
