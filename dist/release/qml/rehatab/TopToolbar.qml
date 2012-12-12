@@ -1,37 +1,38 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: topToolbar
 
     width: 664
-    height: 124
-    color: myPalette.buttonBg
-    border.width: 4
-    border.color: myPalette.buttonBorder
+    height: 40
+//    color: myPalette.buttonBg
+//    border.width: 4
+//    border.color: myPalette.buttonBorder
 
     Row {
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
-        anchors.leftMargin: 20
+        anchors.leftMargin: 40
         spacing: 10
         TopToolbarButton {
             id: btShowPersonView
             imageurl: "content/user.png"
-            selected: true
+            menuTxt: qsTr("Klienten")
+            selected: stateMaschine.personMenuState.isActive
             onIsSelected: {
-                btShowGroupView.selected = false
-
+                stateMaschine.personMenu();
             }
         }
         TopToolbarButton {
             id: btShowGroupView
             imageurl: "content/users.png"
+            selected: stateMaschine.calendarMenuState.isActive
+            menuTxt: qsTr("Kalender")
             onIsSelected: {
-                btShowPersonView.selected = false
+                stateMaschine.calendarMenu();
+
             }
         }
-
     }
-
 }

@@ -1,26 +1,30 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-
-Rectangle {
+import QtDesktop 0.1
+Item {
     id: topToolbarButton
-    width: 104
-    height: 84
+    width: text.width + 30
+    height: 42
 
     property bool selected: false
     property string imageurl: ""
+    property string menuTxt: "MenuText"
     signal isSelected
-    color: myPalette.buttonBorder
-    border.color: myPalette.buttonBorder
-    border.width: 4
 
-    Image {
-        id: image
-        source: imageurl
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        opacity: 0.5
-
+    Rectangle {
+        anchors.fill: parent
+        color: selected? main_style.navigationSelBg: "transparent"
+        opacity: 0.7
     }
+
+    Text {
+        id: text
+        color: "white"
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: menuTxt
+    }
+
 
     MouseArea {
         anchors.fill: parent
@@ -35,45 +39,13 @@ Rectangle {
                 topToolbarButton.state = "unselected"
             }
         }
-        onClicked: {
-            selected = true
-            isSelected()
-        }
 
+        onClicked: isSelected()
+    }
+    CursorArea {
+        anchors.fill: parent
+        cursor: Qt.PointingHandCursor
     }
 
-    states: [
-        State {
-            name: "selected"
-            when: selected
-            PropertyChanges {
-                target: image
-                opacity: 1
-            }
-            PropertyChanges {
-                target: topToolbarButton
-                border.color: "white"
-                border.width: 4
-
-            }
-        },
-        State {
-            name: "unselected"
-            PropertyChanges {
-                target: topToolbarButton
-                border.color: "#2886a8"
-                border.width: 4
-
-            }
-        },
-        State {
-            name: "hovered"
-            PropertyChanges {
-                target: image
-                opacity: 1
-            }
-        }
-
-    ]
 
 }
