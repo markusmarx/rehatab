@@ -1,4 +1,4 @@
-#QDJANGO_LIBRARY_TYPE=staticlib
+QDJANGO_LIBRARY_TYPE=staticlib
 include(../../../qt.extern/qdjango/qdjango.pri)
 INCLUDEPATH += $$QDJANGO_INCLUDEPATH
 

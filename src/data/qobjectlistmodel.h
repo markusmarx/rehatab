@@ -32,6 +32,7 @@ public:
     Q_INVOKABLE QObject* findById(QVariant id);
     Q_INVOKABLE void update(QObject* obj);
     Q_INVOKABLE int size();
+    void clear();
 
     QList<QObject*> removedObjects();
 

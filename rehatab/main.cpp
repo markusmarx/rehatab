@@ -34,25 +34,40 @@
 #include "util/QsLogDest.h"
 
 #include <QDebug>
-Q_DECL_EXPORT int main(int argc, char *argv[])
-{
-    QScopedPointer<QApplication> app(createApplication(argc, argv));
-    app->addLibraryPath(app->applicationDirPath() + "/plugins");
+#include <logic/statisticcontroller.h>
 
-    QSettings cfg(QSettings::IniFormat, QSettings::UserScope, "FoolSoft", "rehatab");
-    QDir settingsDir = QFileInfo(cfg.fileName()).absoluteDir();
+int initApplication(QApplication* app, QDir dataDir) {
 
-    if (!settingsDir.exists()) {
-        if (!settingsDir.mkpath(".")) {
+    if (!dataDir.exists()) {
+        if (!dataDir.mkpath(".")) {
             QMessageBox msgBox;
             msgBox.setText(app->tr("Das Programm wurde nicht initialisiert."));
             msgBox.setInformativeText(app->tr("Kontaktieren sie den Support!"));
             msgBox.setStandardButtons(QMessageBox::Ok);
             msgBox.setDefaultButton(QMessageBox::Ok);
             msgBox.exec();
-            return 1;
+            return false;
         }
-    } else if (cfg.value("process").toBool()) {
+    }
+    return true;
+}
+
+Q_DECL_EXPORT int main(int argc, char *argv[])
+{
+    QScopedPointer<QApplication> app(createApplication(argc, argv));
+    app->addLibraryPath(app->applicationDirPath() + "/plugins");
+
+    app->setOrganizationName("FoolSoft");
+    app->setApplicationName("rehatab");
+
+    QDir dataDir(QDesktopServices::storageLocation(QDesktopServices::DataLocation));
+    QSettings cfg(QSettings::IniFormat, QSettings::UserScope, app->organizationName(), app->applicationName());
+
+    if (!initApplication(app.data(), dataDir)) {
+        return 1;
+    }
+
+    if (cfg.value("process").toBool()) {
         QMessageBox msgBox;
         msgBox.setText(app->tr("Das Programm ist abgestürtzt."));
         msgBox.setInformativeText(app->tr("Kontaktieren sie den Support!"));
@@ -63,7 +78,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     cfg.setValue("process", true);
 
-    qDebug() << "load setting from " + QFileInfo(cfg.fileName()).absolutePath();
+    qDebug() << "load setting from " + dataDir.absolutePath();
     QsLogging::Logger& logger = QsLogging::Logger::instance();
     logger.setLoggingLevel(QsLogging::TraceLevel);
 
@@ -71,13 +86,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
                 QsLogging::DestinationFactory::MakeDebugOutputDestination());
 
     QsLogging::DestinationPtr fileDestination(
-                QsLogging::DestinationFactory::MakeFileDestination(settingsDir.absolutePath() + "/logfile.log"));
+                QsLogging::DestinationFactory::MakeFileDestination(dataDir.absolutePath() + "/logfile.log"));
 
     logger.addDestination(debugDestination.get());
     logger.addDestination(fileDestination.get());
 
     QDjangoDatabaseManager *dbm = new QDjangoDatabaseManager(DatabaseManager::SQLITE, "",
-                                                             settingsDir.absolutePath()+ "/rehatab.db", "default");
+                                                             dataDir.absolutePath()+ "/rehatab.db", "default");
 
     dbm->open("", "", false);
 
@@ -123,6 +138,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("stateMaschine", new MyStateMaschine(app.data()));
     viewer.rootContext()->setContextProperty("clientController", new ClientController(app.data()));
     viewer.rootContext()->setContextProperty("groupController", new GroupController(app.data()));
+    viewer.rootContext()->setContextProperty("statisticController", new StatisticController(app.data()));
     viewer.rootContext()->setContextProperty("Util", new QmlUtil(app.data()));
 
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
@@ -131,6 +147,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     bool res = app->exec();
     cfg.setValue("process", false);
+
 
     return res;
 }

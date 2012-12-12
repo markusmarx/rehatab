@@ -152,6 +152,16 @@ int QObjectListModel::size()
     return m_list.size();
 }
 
+void QObjectListModel::clear()
+{
+    foreach(QObject* obj, m_list) {
+        m_list.removeOne(obj);
+        obj->deleteLater();
+        obj = 0;
+    }
+
+}
+
 QList<QObject *> QObjectListModel::removedObjects()
 {
     return m_removedList;

@@ -9,10 +9,11 @@ Rectangle {
     color:main_style.defaultBg
 
     Component.onCompleted: {
+        NavJS.currentView = new Array()
         stateMaschine.calendarMenuState.isActiveChanged.connect(NavJS.fnSwitchToCalendar)
         stateMaschine.groupMenuState.isActiveChanged.connect(NavJS.fnSwitchToGroupView)
         stateMaschine.personMenuState.isActiveChanged.connect(NavJS.fnSwitchToClientView)
-        NavJS.fnSwitchToClientView(true)
+        stateMaschine.statisticMenuState.isActiveChanged.connect(NavJS.fnSwitchToStatisticView)
 
     }
 
@@ -63,6 +64,13 @@ Rectangle {
         id: comp_clientoverview
         ClientAndGroupView {
             anchors.fill: parent
+        }
+    }
+
+    Component {
+        id: comp_statisticview
+        StatisticView {
+
         }
     }
 

@@ -7,6 +7,12 @@ MyStateMaschine::MyStateMaschine(QObject *parent) :
     m_personMenuState = new MyState(this);
     m_calendarMenuState = new MyState(this);
     m_groupMenuState = new MyState(this);
+    m_statisticMenuState = new MyState(this);
+
+    initNavigation(m_personMenuState);
+    initNavigation(m_groupMenuState);
+    initNavigation(m_calendarMenuState);
+    initNavigation(m_statisticMenuState);
 
     {
         m_personListViewState = new MyState(m_personMenuState);
@@ -19,16 +25,10 @@ MyStateMaschine::MyStateMaschine(QObject *parent) :
     }
 
 
+    //
+    // -- personMenu
+    //
     {
-        m_personMenuState->addTransition(this, SIGNAL(calendarMenu()), m_calendarMenuState);
-        m_personMenuState->addTransition(this, SIGNAL(calendarMenu()), m_calendarMenuState);
-        m_personMenuState->addTransition(this, SIGNAL(groupMenu()), m_groupMenuState);
-        m_calendarMenuState->addTransition(this, SIGNAL(personMenu()), m_personMenuState);
-        m_calendarMenuState->addTransition(this, SIGNAL(groupMenu()), m_groupMenuState);
-        m_groupMenuState->addTransition(this, SIGNAL(personMenu()), m_personMenuState);
-        m_groupMenuState->addTransition(this, SIGNAL(calendarMenu()), m_calendarMenuState);
-
-
         m_personMenuState->setInitialState(m_personListViewState);
         m_personListViewState->addTransition(this, SIGNAL(openPerson()), m_openPersonState);
         m_personListViewState->addTransition(this, SIGNAL(newPerson()), m_newPersonState);
@@ -36,10 +36,6 @@ MyStateMaschine::MyStateMaschine(QObject *parent) :
         m_openPersonState->addTransition(this, SIGNAL(openPerson()), m_openPersonState);
         m_newPersonState->addTransition(this, SIGNAL(closePerson()), m_personListViewState);
     }
-
-
-
-
     setInitialState(m_personMenuState);
     start();
 }
@@ -79,6 +75,11 @@ QObject *MyStateMaschine::groupMenuState() const
     return m_groupMenuState;
 }
 
+QObject *MyStateMaschine::statisticMenuState() const
+{
+    return m_statisticMenuState;
+}
+
 bool MyStateMaschine::modal() const
 {
     return m_modal;
@@ -90,4 +91,16 @@ void MyStateMaschine::setModal(bool modal)
     emit modalChanged();
 }
 
+
+void MyStateMaschine::initNavigation(MyState *state)
+{
+    if (state != m_personMenuState)
+        state->addTransition(this, SIGNAL(personMenu()), m_personMenuState);
+    if (state != m_calendarMenuState)
+        state->addTransition(this, SIGNAL(calendarMenu()), m_calendarMenuState);
+    if (state != m_groupMenuState)
+        state->addTransition(this, SIGNAL(groupMenu()), m_groupMenuState);
+    if (state != m_statisticMenuState)
+        state->addTransition(this, SIGNAL(statisticMenu()), m_statisticMenuState);
+}
 

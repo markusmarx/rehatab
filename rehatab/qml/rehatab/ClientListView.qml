@@ -153,6 +153,11 @@ Item {
 
         onContentYChanged: {
             behavior.enabled = false
+
+            verticalScrollBar.blockupdates = true
+            verticalScrollBar.value = contentY
+            verticalScrollBar.blockupdates = false
+
             if (!currentItem) {
                 return
             }
@@ -189,9 +194,7 @@ Item {
                 highlighter.y = _visibleCurrentItem.y
             }
 
-            verticalScrollBar.blockupdates = true
-            verticalScrollBar.value = contentY
-            verticalScrollBar.blockupdates = false
+
         }
 
 

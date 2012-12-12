@@ -199,6 +199,8 @@ bool AppointmentController::savePersonAppointment(PersonAppointment *papp, QDate
         pCH->setDate(date);
     }
     pCH->setPresent(papp->client()->presence());
+    papp->contract()->save();
+
     return pCH->save();
 
 }

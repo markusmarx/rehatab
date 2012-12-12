@@ -9,6 +9,8 @@ Item {
     property Person _person
 
     function fnLoadClient(personId) {
+        if (_person)
+            _person.deleteLater()
         _person = personController.loadPerson(personId)
         clientController.loadPerson(_person)
     }

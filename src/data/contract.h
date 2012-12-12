@@ -20,7 +20,6 @@ class Contract : public QDjangoModel
 
     Q_CLASSINFO("id", "primary_key=true auto_increment=true db_column=contractId")
     Q_CLASSINFO("client", "db_column=clientId")
-    Q_CLASSINFO("openValue", "ignore_field=true")
     Q_CLASSINFO("validFrom", "null=false")
     Q_CLASSINFO("validTo", "null=false")
     Q_CLASSINFO("valid", "ignore_field=true")

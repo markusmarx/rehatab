@@ -5,6 +5,7 @@ Item {
 
     property Item _currentView
     property int _lastSelectedClientId:-1
+
     function fnShowNewClientForm() {
 
         if (_currentView) {

@@ -126,12 +126,13 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
             QDjangoQuerySet<PersonContractHistory> qsPresence;
             qsPresence = qsPresence.filter(QDjangoWhere("personGroup_id", QDjangoWhere::Equals, group->id())
                     && QDjangoWhere("client_id", QDjangoWhere::Equals, p->id()) && QDjangoWhere("date", QDjangoWhere::Equals, date));
+            Contract *c = qobject_cast<Contract*>(p->contracts()->at(0));
             if (qsPresence.count() > 0) {
                 QVariantMap updateValues;
                 updateValues["present"] = p->presence();
                 qsPresence.update(updateValues);
+
             } else {
-                Contract *c = qobject_cast<Contract*>(p->contracts()->at(0));
                 QScopedPointer<PersonContractHistory> pgH(new PersonContractHistory());
                 pgH->setPresent(p->presence()?1:0);
                 pgH->setDate(date);
@@ -140,6 +141,7 @@ bool GroupController::saveGroup(PersonGroup* group, QDateTime date)
                 pgH->setContract(new Contract(this, c->id()));
                 pgH->save();
             }
+            c->save();
         }
 
     }

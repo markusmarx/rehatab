@@ -101,6 +101,7 @@ bool ClientController::saveContract(Contract *contract, Person* person)
     contract->setValidTo(d);
     if (contract->id() < 0) {
         person->contracts()->append(contract);
+        contract->setOpenValue(contract->value());
     }
 
     return contract->save();
@@ -120,12 +121,12 @@ Contract* ClientController::loadContract(Contract* contract)
     QStringList fields;
     fields << "id";
     QDjangoQuerySet<PersonContractHistory> pgHistoryQuery;
-    int openValue = contract->value();
+//    int openValue = contract->value();
 
-    int count = pgHistoryQuery.filter(QDjangoWhere("contract_id", QDjangoWhere::Equals, contract->id())
-                 && QDjangoWhere("present", QDjangoWhere::Equals, true)).count();
-    openValue -= count;
-    contract->setOpenValue(openValue);
+//    int count = pgHistoryQuery.filter(QDjangoWhere("contract_id", QDjangoWhere::Equals, contract->id())
+//                 && QDjangoWhere("present", QDjangoWhere::Equals, true)).count();
+//    openValue -= count;
+    //contract->setOpenValue(openValue);
     return contract;
 }
 

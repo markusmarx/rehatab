@@ -40,6 +40,13 @@ Item {
                 stateMaschine.calendarMenu();
             }
         }
+        TopToolbarButton {
+            selected: stateMaschine.statisticMenuState.isActive
+            menuTxt: qsTr("Statistik")
+            onIsSelected: {
+                stateMaschine.statisticMenu();
+            }
+        }
     }
 
 }
