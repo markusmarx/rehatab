@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024px"
+   height="768px"
+   id="svg3900"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="Neues Dokument 7">
+  <defs
+     id="defs3902" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="443.75603"
+     inkscape:cy="551.47987"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:window-width="1400"
+     inkscape:window-height="994"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3905">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <rect
+       style="fill:#ffb207;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3941"
+       width="1024.1261"
+       height="130.50967"
+       x="-0.064835429"
+       y="60.355328"
+       rx="1.5884677e-014"
+       ry="6.8825048e-015" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3912"
+       y="126.21181"
+       x="697.74823"
+       style="font-size:14.46728992px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"><tspan
+         style="font-size:22.73431396px;font-weight:bold;fill:#ffffff;-inkscape-font-specification:Arial Bold"
+         y="126.21181"
+         x="697.74823"
+         id="tspan3914"
+         sodipodi:role="line">Kurse</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3912-2"
+       y="126.69841"
+       x="833.31927"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"><tspan
+         style="font-size:22px;font-weight:bold;fill:#ffffff;-inkscape-font-specification:Arial Bold"
+         y="126.69841"
+         x="833.31927"
+         id="tspan3914-4"
+         sodipodi:role="line">Termine</tspan></text>
+    <rect
+       style="fill:#444444;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3943"
+       width="1023.8906"
+       height="60.81118"
+       x="0"
+       y="0.08203543"
+       rx="2.1094237e-015"
+       ry="1.7114193e-015" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect4453"
+       width="944.69464"
+       height="38.183762"
+       x="39.355335"
+       y="152.81709"
+       rx="1.9363072e-014"
+       ry="9.5296204e-016" />
+    <rect
+       style="fill:#ea7b31;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect4455"
+       width="176.7767"
+       height="55.154324"
+       x="469.27628"
+       y="97.319641"
+       rx="2.158244e-014"
+       ry="1.4453259e-015" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3912-2-5"
+       y="37.525635"
+       x="633.97455"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       xml:space="preserve"><tspan
+         style="font-size:22px;font-weight:bold;fill:#ffffff;-inkscape-font-specification:Arial Bold"
+         y="37.525635"
+         x="633.97455"
+         id="tspan3914-4-5"
+         sodipodi:role="line">Einstellungen</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+       x="513.70508"
+       y="125.74005"
+       id="text3908"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3910"
+         x="513.70508"
+         y="125.74005"
+         style="font-size:22px;font-weight:bold;fill:#ffffff;-inkscape-font-specification:Arial Bold">Klienten</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
+       x="793.97455"
+       y="37.525635"
+       id="text4488"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4490"
+         x="793.97455"
+         y="37.525635"
+         style="font-size:22px;font-weight:bold;fill:#ffffff;-inkscape-font-specification:Arial Bold">Fehler melden</tspan></text>
+  </g>
+</svg>
